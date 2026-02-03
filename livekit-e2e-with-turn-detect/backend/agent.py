@@ -1,9 +1,10 @@
 """
-LiveKit Voice Agent with VAD + ASR + LLM + TTS Pipeline
+LiveKit Voice Agent with VAD + ASR + LLM + TTS Pipeline and Turn Detection
 
 Uses:
 - Silero VAD for voice activity detection
 - Volcengine STT for speech-to-text
+- MultilingualModel for turn detection
 - OpenAI-compatible LLM for conversation
 - Volcengine TTS for text-to-speech
 """
@@ -14,6 +15,7 @@ from dotenv import load_dotenv
 
 from livekit.agents import Agent, AgentSession, JobContext, cli, WorkerOptions
 from livekit.plugins import silero, openai, volcengine
+from livekit.plugins.turn_detector.multilingual import MultilingualModel
 
 load_dotenv()
 
@@ -48,6 +50,9 @@ async def entrypoint(ctx: JobContext):
         cluster=os.getenv("VOLCENGINE_STT_CLUSTER", "volcengine_streaming_common"),
     )
 
+    # Turn detection using MultilingualModel
+    turn_detector = MultilingualModel()
+
     # OpenAI-compatible LLM
     llm = openai.LLM(
         model=os.getenv("LLM_MODEL", "gpt-4o-mini"),
@@ -65,15 +70,16 @@ async def entrypoint(ctx: JobContext):
         ),
     )
 
-    # Create agent session with pipeline components
+    # Create agent session with pipeline components including turn detection
     session = AgentSession(
         vad=vad,
         stt=stt,
         llm=llm,
         tts=tts,
+        turn_detection=turn_detector,
     )
 
-    # Event handlers for logging (using correct event names from docs)
+    # Event handlers for logging
     @session.on("agent_state_changed")
     def on_agent_state_changed(state: str):
         logger.info(f"Agent state changed: {state}")
@@ -96,7 +102,7 @@ async def entrypoint(ctx: JobContext):
 
     # Start the session
     logger.info(
-        "Starting agent session with pipeline: Silero VAD + Volcengine STT + OpenAI LLM + Volcengine TTS"
+        "Starting agent session with pipeline: Silero VAD + Volcengine STT + Turn Detection + OpenAI LLM + Volcengine TTS"
     )
     await session.start(agent=VoiceAssistant(), room=ctx.room)
 
