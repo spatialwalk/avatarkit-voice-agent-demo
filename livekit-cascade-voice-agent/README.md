@@ -1,21 +1,22 @@
-# LiveKit Voice Agent with Turn Detection
+# LiveKit Cascade Voice Agent
 
-A voice agent using LiveKit's agents framework with Volcengine doubao e2e realtime model and external turn detection.
+A voice agent using LiveKit's agents framework with a cascade pipeline: Silero VAD + Volcengine STT + Turn Detection + OpenAI LLM + Volcengine TTS.
 
 ## Features
 
+- **Cascade Pipeline**: Modular VAD → STT → Turn Detection → LLM → TTS architecture
 - **Voice Interaction**: Real-time voice conversation with AI
 - **Text Input**: Send text messages to the agent
-- **Turn Detection**: External turn detection using MultilingualModel + Silero VAD
+- **Turn Detection**: Smart turn detection using MultilingualModel
 - **Voice Activity Indicator**: Visual feedback when user is speaking
 - **Transcript View**: Display of conversation history
 
 ## Project Structure
 
 ```
-livekit-e2e-with-turn-detect/
+livekit-cascade-voice-agent/
 ├── backend/
-│   ├── agent.py              # Main agent with turn detection
+│   ├── agent.py              # Main agent with cascade pipeline
 │   ├── token_server.py       # Token generation API
 │   ├── pyproject.toml        # Python dependencies (uv)
 │   └── .env.example
@@ -40,7 +41,8 @@ livekit-e2e-with-turn-detect/
 - Node.js 18+
 - [uv](https://docs.astral.sh/uv/) (Python package manager)
 - LiveKit Cloud account or self-hosted LiveKit server
-- Volcengine account with realtime model and STT access
+- Volcengine account with STT and TTS access
+- OpenAI API key (or compatible API)
 
 ## Setup
 
@@ -61,13 +63,21 @@ LIVEKIT_URL=wss://your-project.livekit.cloud
 LIVEKIT_API_KEY=your_api_key
 LIVEKIT_API_SECRET=your_api_secret
 
-# Volcengine Realtime Model
-VOLCENGINE_REALTIME_APP_ID=your_app_id
-VOLCENGINE_REALTIME_ACCESS_TOKEN=your_token
+# OpenAI-compatible LLM
+LLM_API_KEY=your_openai_api_key
+LLM_MODEL=gpt-4o-mini
+# LLM_BASE_URL=https://api.openai.com/v1  # Optional: for OpenAI-compatible APIs
 
-# Volcengine STT (for turn detection)
+# Volcengine STT (Speech-to-Text)
 VOLCENGINE_STT_APP_ID=your_stt_app_id
 VOLCENGINE_STT_ACCESS_TOKEN=your_stt_token
+VOLCENGINE_STT_CLUSTER=volcengine_streaming_common
+
+# Volcengine TTS (Text-to-Speech)
+VOLCENGINE_TTS_APP_ID=your_tts_app_id
+VOLCENGINE_TTS_ACCESS_TOKEN=your_tts_token
+VOLCENGINE_TTS_CLUSTER=volcano_tts
+VOLCENGINE_TTS_VOICE=zh_female_tianmeixiaoyuan_moon_bigtts
 ```
 
 ### 2. Backend Setup
@@ -85,7 +95,7 @@ uv sync
 cd frontend
 
 # Install dependencies
-npm install
+pnpm install
 ```
 
 ## Running the Application
@@ -114,7 +124,7 @@ In a new terminal:
 
 ```bash
 cd frontend
-npm run dev
+pnpm dev
 ```
 
 Open http://localhost:3000 in your browser.
@@ -130,16 +140,22 @@ Open http://localhost:3000 in your browser.
 
 ## Architecture
 
-### Backend
+### Cascade Pipeline
 
-- **Volcengine RealtimeModel**: End-to-end speech model (doubao)
-- **MultilingualModel**: External turn detector from `livekit.plugins.turn_detector`
-- **Silero VAD**: Voice activity detection
-- **Volcengine STT**: Provides transcripts for turn detection
+```
+User Audio → Silero VAD → Volcengine STT → Turn Detection → OpenAI LLM → Volcengine TTS → Agent Audio
+```
+
+- **Silero VAD**: Voice activity detection - detects when user starts/stops speaking
+- **Volcengine STT**: Speech-to-text - transcribes user speech
+- **MultilingualModel**: Turn detection - determines when user has finished their turn
+- **OpenAI LLM**: Language model - generates conversational responses
+- **Volcengine TTS**: Text-to-speech - synthesizes agent voice
 
 ### Frontend
 
 - **LiveKitRoom**: Manages room connection
+- **RoomAudioRenderer**: Plays agent audio
 - **AudioVisualizer**: Shows voice activity via audio analysis
 - **ChatInput**: Text message input with Enter to send
 - **TranscriptView**: Displays conversation with auto-scroll
