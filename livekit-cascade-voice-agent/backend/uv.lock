@@ -340,6 +340,21 @@ wheels = [
 ]
 
 [[package]]
+name = "avatarkit"
+version = "0.1.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "aiohttp" },
+    { name = "nanoid" },
+    { name = "protobuf" },
+    { name = "websockets" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/3b/f8/bbd50cc7e145e160cd852c9e1341f00a547740e989c9668f54692107cd95/avatarkit-0.1.3.tar.gz", hash = "sha256:5cac2457e66d0d69486c7b43e0d8c4b16b3c29c758d3a18f05e75e012a73f5de", size = 13034, upload-time = "2026-01-31T15:44:09.897Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1c/4d/99ace08190e28c0369ca31bbc6e7e1e330307a2f24a5dfdf452a54871133/avatarkit-0.1.3-py3-none-any.whl", hash = "sha256:6de6c2803f5b2e0216c33d34306723c6176d9986b420becdc316b7acc633373e", size = 16240, upload-time = "2026-01-31T15:44:11.125Z" },
+]
+
+[[package]]
 name = "blinker"
 version = "1.9.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1758,6 +1773,15 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/e3/b3/e8863e6a2da15a9d7e98976ff402e871b7352c76566df6c18d0378e0d9cf/multidict-6.7.1-cp39-cp39-win_amd64.whl", hash = "sha256:f537b55778cd3cbee430abe3131255d3a78202e0f9ea7ffc6ada893a4bcaeea4", size = 46180, upload-time = "2026-01-26T02:46:40.422Z" },
     { url = "https://files.pythonhosted.org/packages/93/d3/dd4fa951ad5b5fa216bf30054d705683d13405eea7459833d78f31b74c9c/multidict-6.7.1-cp39-cp39-win_arm64.whl", hash = "sha256:749aa54f578f2e5f439538706a475aa844bfa8ef75854b1401e6e528e4937cf9", size = 43231, upload-time = "2026-01-26T02:46:41.945Z" },
     { url = "https://files.pythonhosted.org/packages/81/08/7036c080d7117f28a4af526d794aab6a84463126db031b007717c1a6676e/multidict-6.7.1-py3-none-any.whl", hash = "sha256:55d97cc6dae627efa6a6e548885712d4864b81110ac76fa4e534c03819fa4a56", size = 12319, upload-time = "2026-01-26T02:46:44.004Z" },
+]
+
+[[package]]
+name = "nanoid"
+version = "2.0.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/b7/9d/0250bf5935d88e214df469d35eccc0f6ff7e9db046fc8a9aeb4b2a192775/nanoid-2.0.0.tar.gz", hash = "sha256:5a80cad5e9c6e9ae3a41fa2fb34ae189f7cb420b2a5d8f82bd9d23466e4efa68", size = 3290, upload-time = "2018-11-20T14:45:51.578Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/2e/0d/8630f13998638dc01e187fadd2e5c6d42d127d08aeb4943d231664d6e539/nanoid-2.0.0-py3-none-any.whl", hash = "sha256:90aefa650e328cffb0893bbd4c236cfd44c48bc1f2d0b525ecc53c3187b653bb", size = 5844, upload-time = "2018-11-20T14:45:50.165Z" },
 ]
 
 [[package]]
@@ -3304,6 +3328,7 @@ name = "voice-agent"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "avatarkit" },
     { name = "flask" },
     { name = "flask-cors" },
     { name = "livekit-agents" },
@@ -3317,6 +3342,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "avatarkit", specifier = ">=0.1.3" },
     { name = "flask", specifier = ">=3.0.0" },
     { name = "flask-cors", specifier = ">=4.0.0" },
     { name = "livekit-agents", specifier = "==1.2.9" },

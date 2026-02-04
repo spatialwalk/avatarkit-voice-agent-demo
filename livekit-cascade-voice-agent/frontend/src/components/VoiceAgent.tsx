@@ -10,12 +10,14 @@ import { Track, RoomEvent, type TranscriptionSegment } from 'livekit-client';
 import AudioVisualizer from './AudioVisualizer';
 import ChatInput from './ChatInput';
 import TranscriptView from './TranscriptView';
+import AvatarDisplay from './AvatarDisplay';
 
 interface VoiceAgentProps {
   token: string;
   serverUrl: string;
   roomName: string;
   onDisconnect: () => void;
+  avatarEnabled?: boolean;
 }
 
 export interface TranscriptMessage {
@@ -26,7 +28,19 @@ export interface TranscriptMessage {
   isFinal: boolean;
 }
 
-function VoiceAgentInner({ onDisconnect }: { onDisconnect: () => void }) {
+function VoiceAgentInner({
+  onDisconnect,
+  avatarEnabled = false,
+  livekitUrl,
+  livekitToken,
+  roomName,
+}: {
+  onDisconnect: () => void;
+  avatarEnabled?: boolean;
+  livekitUrl: string;
+  livekitToken: string;
+  roomName: string;
+}) {
   const room = useRoomContext();
   const { localParticipant } = useLocalParticipant();
   const [transcripts, setTranscripts] = useState<TranscriptMessage[]>([]);
@@ -143,9 +157,24 @@ function VoiceAgentInner({ onDisconnect }: { onDisconnect: () => void }) {
 
       {/* Main content */}
       <main className="flex-1 flex flex-col overflow-hidden">
-        {/* Transcript area */}
-        <div className="flex-1 overflow-y-auto">
-          <TranscriptView transcripts={transcripts} />
+        {/* Content area - split layout when avatar enabled */}
+        <div className={`flex-1 overflow-hidden ${avatarEnabled ? 'flex' : 'flex flex-col'}`}>
+          {/* Avatar panel (left side when enabled) */}
+          {avatarEnabled && (
+            <div className="w-1/2 p-4 border-r border-slate-700">
+              <AvatarDisplay
+                className="h-full"
+                livekitUrl={livekitUrl}
+                livekitToken={livekitToken}
+                roomName={roomName}
+              />
+            </div>
+          )}
+
+          {/* Transcript area */}
+          <div className={`overflow-y-auto ${avatarEnabled ? 'w-1/2' : 'flex-1'}`}>
+            <TranscriptView transcripts={transcripts} />
+          </div>
         </div>
 
         {/* Voice activity and input */}
@@ -166,6 +195,8 @@ function VoiceAgentInner({ onDisconnect }: { onDisconnect: () => void }) {
 }
 
 export default function VoiceAgent(props: VoiceAgentProps) {
+  const { avatarEnabled = false } = props;
+
   return (
     <LiveKitRoom
       token={props.token}
@@ -175,8 +206,16 @@ export default function VoiceAgent(props: VoiceAgentProps) {
       video={false}
       onDisconnected={props.onDisconnect}
     >
-      <RoomAudioRenderer />
-      <VoiceAgentInner onDisconnect={props.onDisconnect} />
+      {/* Only render RoomAudioRenderer when avatar is NOT enabled */}
+      {/* Avatar publishes its own audio track, so we skip this to avoid duplicate audio */}
+      {!avatarEnabled && <RoomAudioRenderer />}
+      <VoiceAgentInner
+        onDisconnect={props.onDisconnect}
+        avatarEnabled={avatarEnabled}
+        livekitUrl={props.serverUrl}
+        livekitToken={props.token}
+        roomName={props.roomName}
+      />
     </LiveKitRoom>
   );
 }

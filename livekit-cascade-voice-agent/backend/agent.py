@@ -7,6 +7,7 @@ Uses:
 - MultilingualModel for turn detection
 - OpenAI-compatible LLM for conversation
 - Volcengine TTS for text-to-speech
+- Optional: SpatialReal Avatar for lip-synced video
 """
 
 import os
@@ -16,6 +17,8 @@ from dotenv import load_dotenv
 from livekit.agents import Agent, AgentSession, JobContext, cli, WorkerOptions
 from livekit.plugins import silero, openai, volcengine
 from livekit.plugins.turn_detector.multilingual import MultilingualModel
+
+from avatar import AvatarSession
 
 load_dotenv()
 
@@ -40,6 +43,10 @@ async def entrypoint(ctx: JobContext):
     logger.info(f"Connecting to room: {ctx.room.name}")
     await ctx.connect()
 
+    # Check if avatar mode is enabled
+    avatar_enabled = os.getenv("AVATAR_ENABLED", "false").lower() == "true"
+    logger.info(f"Avatar enabled: {avatar_enabled}")
+
     # Silero VAD for voice activity detection
     vad = silero.VAD.load()
 
@@ -56,7 +63,7 @@ async def entrypoint(ctx: JobContext):
     # OpenAI-compatible LLM
     llm = openai.LLM(
         model=os.getenv("LLM_MODEL", "gpt-4o-mini"),
-        base_url=os.getenv("LLM_BASE_URL"),  # Optional: for OpenAI-compatible APIs
+        base_url=os.getenv("LLM_BASE_URL"),
         api_key=os.getenv("LLM_API_KEY", os.getenv("OPENAI_API_KEY")),
     )
 
@@ -65,12 +72,10 @@ async def entrypoint(ctx: JobContext):
         app_id=os.getenv("VOLCENGINE_TTS_APP_ID"),
         access_token=os.getenv("VOLCENGINE_TTS_ACCESS_TOKEN"),
         cluster=os.getenv("VOLCENGINE_TTS_CLUSTER", "volcano_tts"),
-        voice=os.getenv(
-            "VOLCENGINE_TTS_VOICE", "zh_female_tianmeixiaoyuan_moon_bigtts"
-        ),
+        voice=os.getenv("VOLCENGINE_TTS_VOICE", "zh_female_tianmeixiaoyuan_moon_bigtts"),
     )
 
-    # Create agent session with pipeline components including turn detection
+    # Create agent session with pipeline components
     session = AgentSession(
         vad=vad,
         stt=stt,
@@ -78,6 +83,13 @@ async def entrypoint(ctx: JobContext):
         tts=tts,
         turn_detection=turn_detector,
     )
+
+    # Setup avatar if enabled
+    if avatar_enabled:
+        logger.info("Avatar mode enabled, initializing avatar session...")
+        avatar = AvatarSession()
+        await avatar.start(session, room=ctx.room)
+        logger.info("Avatar session started")
 
     # Event handlers for logging
     @session.on("agent_state_changed")
@@ -96,15 +108,15 @@ async def entrypoint(ctx: JobContext):
     def on_conversation_item_added(item):
         logger.info(f"Conversation item added: {item}")
 
-    @session.on("close")
-    def on_close():
-        logger.info("Session closed")
-
     # Start the session
     logger.info(
         "Starting agent session with pipeline: Silero VAD + Volcengine STT + Turn Detection + OpenAI LLM + Volcengine TTS"
+        + (" + SpatialReal Avatar" if avatar_enabled else "")
     )
-    await session.start(agent=VoiceAssistant(), room=ctx.room)
+    await session.start(
+        agent=VoiceAssistant(),
+        room=ctx.room,
+    )
 
     # Send initial greeting
     await session.say("你好！我是你的语音助手，有什么可以帮到你的吗？")
