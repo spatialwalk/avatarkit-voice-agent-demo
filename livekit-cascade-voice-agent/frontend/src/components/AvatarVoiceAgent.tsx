@@ -6,7 +6,7 @@
  */
 
 import { useCallback, useState, useEffect, useRef } from 'react';
-import { Room, RoomEvent, type TranscriptionSegment } from 'livekit-client';
+import { Room, RoomEvent } from 'livekit-client';
 import {
   AvatarSDK,
   AvatarView,
@@ -45,6 +45,7 @@ export default function AvatarVoiceAgent({
   const avatarPlayerRef = useRef<AvatarPlayer | null>(null);
   const roomRef = useRef<Room | null>(null);
   const initializedRef = useRef(false);
+  const roomListenersSetupRef = useRef(false);
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -178,40 +179,59 @@ export default function AvatarVoiceAgent({
 
   // Setup room event listeners for transcription
   const setupRoomEventListeners = useCallback((room: Room) => {
-    const handleTranscription = (
-      segments: TranscriptionSegment[],
-      participant: { identity: string } | undefined
-    ) => {
-      segments.forEach((segment) => {
-        const isAgent = participant?.identity?.includes('agent') ?? false;
+    // Prevent duplicate registration
+    if (roomListenersSetupRef.current) {
+      return;
+    }
+    roomListenersSetupRef.current = true;
 
-        setTranscripts((prev) => {
-          const existingIndex = prev.findIndex((t) => t.id === segment.id);
-          const newMessage: TranscriptMessage = {
-            id: segment.id,
-            text: segment.text,
-            participant: isAgent ? 'agent' : 'user',
-            timestamp: new Date(),
-            isFinal: segment.final,
-          };
+    // Register text stream handler for transcriptions (Agents 1.0+ API)
+    room.registerTextStreamHandler('lk.transcription', async (reader, participantInfo) => {
+      const text = await reader.readAll();
+      const isFinal = reader.info.attributes?.['lk.transcription_final'] === 'true';
+      const streamId = reader.info.id;
 
-          if (existingIndex >= 0) {
-            const updated = [...prev];
-            updated[existingIndex] = newMessage;
-            return updated;
-          }
-          return [...prev, newMessage];
-        });
+      console.log('Transcription received:', {
+        participantIdentity: participantInfo?.identity,
+        text,
+        isFinal,
+        streamId,
       });
-    };
+
+      const isAgent = (participantInfo?.identity?.includes('agent') ||
+                      participantInfo?.identity?.includes('voice-assistant')) ?? false;
+
+      console.log('Processing transcription:', { isAgent, identity: participantInfo?.identity, text });
+
+      setTranscripts((prev) => {
+        // Use stream ID as the message ID
+        const existingIndex = prev.findIndex((t) => t.id === streamId);
+        const newMessage: TranscriptMessage = {
+          id: streamId,
+          text: text,
+          participant: isAgent ? 'agent' : 'user',
+          timestamp: new Date(),
+          isFinal: isFinal,
+        };
+
+        if (existingIndex >= 0) {
+          const updated = [...prev];
+          updated[existingIndex] = newMessage;
+          return updated;
+        }
+        return [...prev, newMessage];
+      });
+    });
 
     const handleActiveSpeakers = (speakers: { identity: string }[]) => {
-      const agentSpeaking = speakers.some((s) => s.identity.includes('agent'));
+      const agentSpeaking = speakers.some((s) =>
+        s.identity.includes('agent') || s.identity.includes('voice-assistant')
+      );
       setIsAgentSpeaking(agentSpeaking);
     };
 
-    room.on(RoomEvent.TranscriptionReceived, handleTranscription);
     room.on(RoomEvent.ActiveSpeakersChanged, handleActiveSpeakers);
+    console.log('Room event listeners set up for room:', room.name);
   }, []);
 
   // Initialize when container is ready
@@ -233,6 +253,7 @@ export default function AvatarVoiceAgent({
       }
       roomRef.current = null;
       initializedRef.current = false;
+      roomListenersSetupRef.current = false;
     };
   }, [containerReady, initializeAvatar]);
 
