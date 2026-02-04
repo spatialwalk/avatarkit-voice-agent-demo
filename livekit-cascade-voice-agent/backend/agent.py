@@ -18,7 +18,8 @@ from livekit.agents import Agent, AgentSession, JobContext, cli, WorkerOptions
 from livekit.plugins import silero, openai, volcengine
 from livekit.plugins.turn_detector.multilingual import MultilingualModel
 
-from avatar import AvatarSession
+# Import SpatialReal avatar plugin
+from livekit.plugins.spatialreal import AvatarSession
 
 load_dotenv()
 

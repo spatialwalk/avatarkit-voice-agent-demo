@@ -1464,6 +1464,19 @@ wheels = [
 ]
 
 [[package]]
+name = "livekit-plugins-spatialreal"
+version = "1.3.12"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "avatarkit" },
+    { name = "livekit-agents" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/c0/67/e17514c2ed15fa65b35adcf53921f88e8df6df4e2fee5a88e7cfdf51a0af/livekit_plugins_spatialreal-1.3.12.tar.gz", hash = "sha256:39463b8164fa66f3c6b862c40481693f78ac257dd7f838d8b3170ac9a415f305", size = 7594, upload-time = "2026-02-04T09:53:59.947Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/8d/08/c7f527202955b8a3dcb04135a99c9d700f2ece13c41d4412898f565fd8bc/livekit_plugins_spatialreal-1.3.12-py3-none-any.whl", hash = "sha256:120651c8d3518f516314886702575b943e4f109ab4174e5583f41041ceb2b179", size = 7554, upload-time = "2026-02-04T09:53:58.476Z" },
+]
+
+[[package]]
 name = "livekit-plugins-turn-detector"
 version = "1.2.9"
 source = { registry = "https://pypi.org/simple" }
@@ -3335,6 +3348,7 @@ dependencies = [
     { name = "livekit-api" },
     { name = "livekit-plugins-openai" },
     { name = "livekit-plugins-silero" },
+    { name = "livekit-plugins-spatialreal" },
     { name = "livekit-plugins-turn-detector" },
     { name = "livekit-plugins-volcengine" },
     { name = "python-dotenv" },
@@ -3349,6 +3363,7 @@ requires-dist = [
     { name = "livekit-api", specifier = ">=0.6.0" },
     { name = "livekit-plugins-openai", specifier = "==1.2.9" },
     { name = "livekit-plugins-silero", specifier = "==1.2.9" },
+    { name = "livekit-plugins-spatialreal", specifier = ">=1.2.9" },
     { name = "livekit-plugins-turn-detector", specifier = "==1.2.9" },
     { name = "livekit-plugins-volcengine", specifier = "==1.3.0" },
     { name = "python-dotenv", specifier = ">=1.0.0" },
