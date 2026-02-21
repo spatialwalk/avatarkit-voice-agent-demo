@@ -1,22 +1,29 @@
 """
-LiveKit Voice Agent with VAD + ASR + LLM + TTS Pipeline and Turn Detection
+LiveKit Voice Agent with VAD + ASR + LLM + TTS Pipeline
 
 Uses:
 - Silero VAD for voice activity detection
-- Volcengine STT for speech-to-text
-- MultilingualModel for turn detection
+- Deepgram STT for speech-to-text
 - OpenAI-compatible LLM for conversation
-- Volcengine TTS for text-to-speech
+- Cartesia TTS for text-to-speech
 - Optional: SpatialReal Avatar for lip-synced video
 """
 
 import os
 import logging
 from dotenv import load_dotenv
+from livekit import rtc
 
-from livekit.agents import Agent, AgentSession, JobContext, cli, WorkerOptions
-from livekit.plugins import silero, openai, volcengine
-from livekit.plugins.turn_detector.multilingual import MultilingualModel
+from livekit.agents import (
+    Agent,
+    AgentSession,
+    AutoSubscribe,
+    JobContext,
+    RoomInputOptions,
+    WorkerOptions,
+    cli,
+)
+from livekit.plugins import cartesia, deepgram, openai, silero
 
 # Import SpatialReal avatar plugin
 from livekit.plugins.spatialreal import AvatarSession
@@ -25,6 +32,20 @@ load_dotenv()
 
 logger = logging.getLogger("voice-agent")
 logger.setLevel(logging.INFO)
+
+BROWSER_PARTICIPANT_IDENTITY = "browser-user"
+
+
+def _set_target_audio_subscription(participant: rtc.RemoteParticipant) -> None:
+    is_target_participant = participant.identity == BROWSER_PARTICIPANT_IDENTITY
+
+    for publication in participant.track_publications.values():
+        should_subscribe = (
+            is_target_participant
+            and publication.kind == rtc.TrackKind.KIND_AUDIO
+            and publication.source == rtc.TrackSource.SOURCE_MICROPHONE
+        )
+        publication.set_subscribed(should_subscribe)
 
 
 class VoiceAssistant(Agent):
@@ -42,7 +63,21 @@ class VoiceAssistant(Agent):
 async def entrypoint(ctx: JobContext):
     """Main entrypoint for the voice agent."""
     logger.info(f"Connecting to room: {ctx.room.name}")
-    await ctx.connect()
+    await ctx.connect(auto_subscribe=AutoSubscribe.SUBSCRIBE_NONE)
+
+    def on_participant_connected(participant: rtc.RemoteParticipant) -> None:
+        _set_target_audio_subscription(participant)
+
+    def on_track_published(
+        _publication: rtc.RemoteTrackPublication, participant: rtc.RemoteParticipant
+    ) -> None:
+        _set_target_audio_subscription(participant)
+
+    ctx.room.on("participant_connected", on_participant_connected)
+    ctx.room.on("track_published", on_track_published)
+
+    for participant in ctx.room.remote_participants.values():
+        _set_target_audio_subscription(participant)
 
     # Check if avatar mode is enabled
     avatar_enabled = os.getenv("AVATAR_ENABLED", "false").lower() == "true"
@@ -51,15 +86,12 @@ async def entrypoint(ctx: JobContext):
     # Silero VAD for voice activity detection
     vad = silero.VAD.load()
 
-    # Volcengine STT for speech-to-text
-    stt = volcengine.STT(
-        app_id=os.getenv("VOLCENGINE_STT_APP_ID"),
-        access_token=os.getenv("VOLCENGINE_STT_ACCESS_TOKEN"),
-        cluster=os.getenv("VOLCENGINE_STT_CLUSTER", "volcengine_streaming_common"),
+    # Deepgram STT for speech-to-text
+    stt = deepgram.STT(
+        api_key=os.getenv("DEEPGRAM_API_KEY"),
+        model=os.getenv("DEEPGRAM_MODEL", "nova-3"),
+        language=os.getenv("DEEPGRAM_LANGUAGE", "en-US"),
     )
-
-    # Turn detection using MultilingualModel
-    turn_detector = MultilingualModel()
 
     # OpenAI-compatible LLM
     llm = openai.LLM(
@@ -68,12 +100,12 @@ async def entrypoint(ctx: JobContext):
         api_key=os.getenv("LLM_API_KEY", os.getenv("OPENAI_API_KEY")),
     )
 
-    # Volcengine TTS for text-to-speech
-    tts = volcengine.TTS(
-        app_id=os.getenv("VOLCENGINE_TTS_APP_ID"),
-        access_token=os.getenv("VOLCENGINE_TTS_ACCESS_TOKEN"),
-        cluster=os.getenv("VOLCENGINE_TTS_CLUSTER", "volcano_tts"),
-        voice=os.getenv("VOLCENGINE_TTS_VOICE", "zh_female_tianmeixiaoyuan_moon_bigtts"),
+    # Cartesia TTS for text-to-speech
+    tts = cartesia.TTS(
+        api_key=os.getenv("CARTESIA_API_KEY"),
+        model=os.getenv("CARTESIA_MODEL", "sonic-2"),
+        language=os.getenv("CARTESIA_LANGUAGE", "en"),
+        voice=os.getenv("CARTESIA_VOICE", "f786b574-daa5-4673-aa0c-cbe3e8534c02"),
     )
 
     # Create agent session with pipeline components
@@ -82,7 +114,6 @@ async def entrypoint(ctx: JobContext):
         stt=stt,
         llm=llm,
         tts=tts,
-        turn_detection=turn_detector,
     )
 
     # Setup avatar if enabled
@@ -111,12 +142,15 @@ async def entrypoint(ctx: JobContext):
 
     # Start the session
     logger.info(
-        "Starting agent session with pipeline: Silero VAD + Volcengine STT + Turn Detection + OpenAI LLM + Volcengine TTS"
+        "Starting agent session with pipeline: Silero VAD + Deepgram STT + OpenAI LLM + Cartesia TTS"
         + (" + SpatialReal Avatar" if avatar_enabled else "")
     )
     await session.start(
         agent=VoiceAssistant(),
         room=ctx.room,
+        room_input_options=RoomInputOptions(
+            participant_identity=BROWSER_PARTICIPANT_IDENTITY,
+        ),
     )
 
     # Send initial greeting

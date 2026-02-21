@@ -1,13 +1,12 @@
 # LiveKit Cascade Voice Agent
 
-A voice agent using LiveKit's agents framework with a cascade pipeline: Silero VAD + Volcengine STT + Turn Detection + OpenAI LLM + Volcengine TTS.
+A voice agent using LiveKit's agents framework with a cascade pipeline: Silero VAD + Deepgram STT + OpenAI LLM + Cartesia TTS.
 
 ## Features
 
-- **Cascade Pipeline**: Modular VAD → STT → Turn Detection → LLM → TTS architecture
+- **Cascade Pipeline**: Modular VAD → STT → LLM → TTS architecture
 - **Voice Interaction**: Real-time voice conversation with AI
 - **Text Input**: Send text messages to the agent
-- **Turn Detection**: Smart turn detection using MultilingualModel
 - **Voice Activity Indicator**: Visual feedback when user is speaking
 - **Transcript View**: Display of conversation history
 
@@ -37,11 +36,12 @@ livekit-cascade-voice-agent/
 
 ## Prerequisites
 
-- Python 3.9+
+- Python 3.10+
 - Node.js 18+
 - [uv](https://docs.astral.sh/uv/) (Python package manager)
 - LiveKit Cloud account or self-hosted LiveKit server
-- Volcengine account with STT and TTS access
+- Deepgram API key
+- Cartesia API key
 - OpenAI API key (or compatible API)
 
 ## Setup
@@ -68,16 +68,16 @@ LLM_API_KEY=your_openai_api_key
 LLM_MODEL=gpt-4o-mini
 # LLM_BASE_URL=https://api.openai.com/v1  # Optional: for OpenAI-compatible APIs
 
-# Volcengine STT (Speech-to-Text)
-VOLCENGINE_STT_APP_ID=your_stt_app_id
-VOLCENGINE_STT_ACCESS_TOKEN=your_stt_token
-VOLCENGINE_STT_CLUSTER=volcengine_streaming_common
+# Deepgram STT (Speech-to-Text)
+DEEPGRAM_API_KEY=your_deepgram_api_key
+DEEPGRAM_MODEL=nova-3
+DEEPGRAM_LANGUAGE=en-US
 
-# Volcengine TTS (Text-to-Speech)
-VOLCENGINE_TTS_APP_ID=your_tts_app_id
-VOLCENGINE_TTS_ACCESS_TOKEN=your_tts_token
-VOLCENGINE_TTS_CLUSTER=volcano_tts
-VOLCENGINE_TTS_VOICE=zh_female_tianmeixiaoyuan_moon_bigtts
+# Cartesia TTS (Text-to-Speech)
+CARTESIA_API_KEY=your_cartesia_api_key
+CARTESIA_MODEL=sonic-2
+CARTESIA_LANGUAGE=en
+CARTESIA_VOICE=f786b574-daa5-4673-aa0c-cbe3e8534c02
 ```
 
 ### 2. Backend Setup
@@ -143,14 +143,13 @@ Open http://localhost:3000 in your browser.
 ### Cascade Pipeline
 
 ```
-User Audio → Silero VAD → Volcengine STT → Turn Detection → OpenAI LLM → Volcengine TTS → Agent Audio
+User Audio → Silero VAD → Deepgram STT → OpenAI LLM → Cartesia TTS → Agent Audio
 ```
 
 - **Silero VAD**: Voice activity detection - detects when user starts/stops speaking
-- **Volcengine STT**: Speech-to-text - transcribes user speech
-- **MultilingualModel**: Turn detection - determines when user has finished their turn
+- **Deepgram STT**: Speech-to-text - transcribes user speech
 - **OpenAI LLM**: Language model - generates conversational responses
-- **Volcengine TTS**: Text-to-speech - synthesizes agent voice
+- **Cartesia TTS**: Text-to-speech - synthesizes agent voice
 
 ### Frontend
 

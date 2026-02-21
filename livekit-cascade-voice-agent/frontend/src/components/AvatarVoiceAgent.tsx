@@ -6,7 +6,7 @@
  */
 
 import { useCallback, useState, useEffect, useRef } from 'react';
-import { Room, RoomEvent } from 'livekit-client';
+import { Room, RoomEvent, Track } from 'livekit-client';
 import {
   AvatarSDK,
   AvatarView,
@@ -53,7 +53,7 @@ export default function AvatarVoiceAgent({
   const [isConnected, setIsConnected] = useState(false);
   const [transcripts, setTranscripts] = useState<TranscriptMessage[]>([]);
   const [isAgentSpeaking, setIsAgentSpeaking] = useState(false);
-  const [micTrack, setMicTrack] = useState<MediaStreamTrack | null>(null);
+  const [micTrack, setMicTrack] = useState<Track | undefined>(undefined);
 
   // Use callback ref to detect when container is mounted
   const setContainerRef = useCallback((node: HTMLDivElement | null) => {
@@ -164,9 +164,9 @@ export default function AvatarVoiceAgent({
       // Get mic track for visualizer
       const room = player.getNativeClient() as Room | null;
       if (room?.localParticipant) {
-        const micPub = room.localParticipant.getTrackPublication('microphone');
+        const micPub = room.localParticipant.getTrackPublication(Track.Source.Microphone);
         if (micPub?.track) {
-          setMicTrack(micPub.track.mediaStreamTrack);
+          setMicTrack(micPub.track);
         }
       }
 

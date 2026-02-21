@@ -21,6 +21,7 @@ CORS(app)
 LIVEKIT_API_KEY = os.getenv("LIVEKIT_API_KEY")
 LIVEKIT_API_SECRET = os.getenv("LIVEKIT_API_SECRET")
 LIVEKIT_URL = os.getenv("LIVEKIT_URL")
+BROWSER_PARTICIPANT_IDENTITY = "browser-user"
 
 
 async def create_room_and_dispatch_agent(room_name: str):
@@ -46,9 +47,9 @@ def generate_token():
     """Generate a LiveKit access token for a participant."""
     data = request.get_json() or {}
 
-    # Get room name and participant identity from request
+    # Keep browser identity fixed so the agent can target subscriptions.
     room_name = data.get("room", "voice-agent-room")
-    participant_identity = data.get("identity", f"user-{os.urandom(4).hex()}")
+    participant_identity = BROWSER_PARTICIPANT_IDENTITY
 
     if not LIVEKIT_API_KEY or not LIVEKIT_API_SECRET:
         return jsonify({"error": "LiveKit credentials not configured"}), 500
@@ -78,6 +79,7 @@ def generate_token():
         print(f"Successfully dispatched agent to room: {room_name}")
     except Exception as e:
         import traceback
+
         print(f"Warning: Failed to dispatch agent: {e}")
         traceback.print_exc()
 
