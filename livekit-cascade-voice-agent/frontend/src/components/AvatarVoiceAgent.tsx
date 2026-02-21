@@ -34,6 +34,36 @@ export interface TranscriptMessage {
   isFinal: boolean;
 }
 
+function upsertTranscriptMessage(
+  previous: TranscriptMessage[],
+  incoming: TranscriptMessage
+): TranscriptMessage[] {
+  const existingById = previous.findIndex((message) => message.id === incoming.id);
+  if (existingById >= 0) {
+    const updated = [...previous];
+    updated[existingById] = incoming;
+    return updated;
+  }
+
+  const activeIndex = [...previous]
+    .reverse()
+    .findIndex((message) => message.participant === incoming.participant && !message.isFinal);
+
+  if (activeIndex >= 0) {
+    const indexFromStart = previous.length - 1 - activeIndex;
+    const updated = [...previous];
+    updated[indexFromStart] = {
+      ...updated[indexFromStart],
+      text: incoming.text,
+      timestamp: incoming.timestamp,
+      isFinal: incoming.isFinal,
+    };
+    return updated;
+  }
+
+  return [...previous, incoming];
+}
+
 export default function AvatarVoiceAgent({
   token,
   serverUrl,
@@ -46,6 +76,8 @@ export default function AvatarVoiceAgent({
   const roomRef = useRef<Room | null>(null);
   const initializedRef = useRef(false);
   const roomListenersSetupRef = useRef(false);
+  const disconnectingRef = useRef(false);
+  const teardownTaskRef = useRef<Promise<void> | null>(null);
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -54,6 +86,44 @@ export default function AvatarVoiceAgent({
   const [transcripts, setTranscripts] = useState<TranscriptMessage[]>([]);
   const [isAgentSpeaking, setIsAgentSpeaking] = useState(false);
   const [micTrack, setMicTrack] = useState<Track | undefined>(undefined);
+
+  const teardownAvatar = useCallback(async () => {
+    if (teardownTaskRef.current) {
+      await teardownTaskRef.current;
+      return;
+    }
+
+    const player = avatarPlayerRef.current;
+    const view = avatarViewRef.current;
+
+    avatarPlayerRef.current = null;
+    avatarViewRef.current = null;
+    roomRef.current = null;
+    roomListenersSetupRef.current = false;
+    initializedRef.current = false;
+
+    teardownTaskRef.current = (async () => {
+      if (player) {
+        try {
+          await player.disconnect();
+        } catch {
+          // Ignore cleanup errors during teardown.
+        }
+      }
+
+      try {
+        view?.dispose?.();
+      } catch (error) {
+        console.warn('Failed to dispose avatar view:', error);
+      }
+    })();
+
+    try {
+      await teardownTaskRef.current;
+    } finally {
+      teardownTaskRef.current = null;
+    }
+  }, []);
 
   // Use callback ref to detect when container is mounted
   const setContainerRef = useCallback((node: HTMLDivElement | null) => {
@@ -128,7 +198,9 @@ export default function AvatarVoiceAgent({
       player.on('disconnected', () => {
         console.log('Avatar RTC disconnected');
         setIsConnected(false);
-        onDisconnect();
+        if (!disconnectingRef.current) {
+          onDisconnect();
+        }
       });
 
       player.on('error', (err: Error) => {
@@ -187,39 +259,47 @@ export default function AvatarVoiceAgent({
 
     // Register text stream handler for transcriptions (Agents 1.0+ API)
     room.registerTextStreamHandler('lk.transcription', async (reader, participantInfo) => {
-      const text = await reader.readAll();
-      const isFinal = reader.info.attributes?.['lk.transcription_final'] === 'true';
       const streamId = reader.info.id;
+      let text = '';
 
       console.log('Transcription received:', {
         participantIdentity: participantInfo?.identity,
-        text,
-        isFinal,
         streamId,
       });
 
       const isAgent = (participantInfo?.identity?.includes('agent') ||
                       participantInfo?.identity?.includes('voice-assistant')) ?? false;
 
-      console.log('Processing transcription:', { isAgent, identity: participantInfo?.identity, text });
+      console.log('Processing transcription stream:', { isAgent, identity: participantInfo?.identity, streamId });
+
+      for await (const chunk of reader) {
+        text += chunk;
+
+        setTranscripts((prev) => {
+          const newMessage: TranscriptMessage = {
+            id: streamId,
+            text,
+            participant: isAgent ? 'agent' : 'user',
+            timestamp: new Date(),
+            isFinal: false,
+          };
+
+          return upsertTranscriptMessage(prev, newMessage);
+        });
+      }
+
+      const isFinal = reader.info.attributes?.['lk.transcription_final'] === 'true';
 
       setTranscripts((prev) => {
-        // Use stream ID as the message ID
-        const existingIndex = prev.findIndex((t) => t.id === streamId);
         const newMessage: TranscriptMessage = {
           id: streamId,
-          text: text,
+          text,
           participant: isAgent ? 'agent' : 'user',
           timestamp: new Date(),
-          isFinal: isFinal,
+          isFinal,
         };
 
-        if (existingIndex >= 0) {
-          const updated = [...prev];
-          updated[existingIndex] = newMessage;
-          return updated;
-        }
-        return [...prev, newMessage];
+        return upsertTranscriptMessage(prev, newMessage);
       });
     });
 
@@ -241,21 +321,10 @@ export default function AvatarVoiceAgent({
     initializeAvatar();
 
     return () => {
-      if (avatarPlayerRef.current) {
-        // disconnect() is async and internally calls stopPublishing()
-        // Use .catch() to suppress any errors during cleanup
-        avatarPlayerRef.current.disconnect().catch(() => {});
-        avatarPlayerRef.current = null;
-      }
-      if (avatarViewRef.current) {
-        avatarViewRef.current.dispose?.();
-        avatarViewRef.current = null;
-      }
-      roomRef.current = null;
-      initializedRef.current = false;
-      roomListenersSetupRef.current = false;
+      disconnectingRef.current = true;
+      void teardownAvatar();
     };
-  }, [containerReady, initializeAvatar]);
+  }, [containerReady, initializeAvatar, teardownAvatar]);
 
   // Handle container resize
   useEffect(() => {
@@ -299,14 +368,11 @@ export default function AvatarVoiceAgent({
   }, []);
 
   // Handle disconnect
-  const handleDisconnect = useCallback(() => {
-    if (avatarPlayerRef.current) {
-      // disconnect() is async and internally calls stopPublishing()
-      // Use .catch() to suppress any errors
-      avatarPlayerRef.current.disconnect().catch(() => {});
-    }
+  const handleDisconnect = useCallback(async () => {
+    disconnectingRef.current = true;
+    await teardownAvatar();
     onDisconnect();
-  }, [onDisconnect]);
+  }, [onDisconnect, teardownAvatar]);
 
   return (
     <div className="flex flex-col h-screen">

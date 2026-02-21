@@ -10,14 +10,12 @@ import { Track, RoomEvent, type TranscriptionSegment } from 'livekit-client';
 import AudioVisualizer from './AudioVisualizer';
 import ChatInput from './ChatInput';
 import TranscriptView from './TranscriptView';
-import AvatarDisplay from './AvatarDisplay';
 
 interface VoiceAgentProps {
   token: string;
   serverUrl: string;
   roomName: string;
   onDisconnect: () => void;
-  avatarEnabled?: boolean;
 }
 
 export interface TranscriptMessage {
@@ -28,19 +26,37 @@ export interface TranscriptMessage {
   isFinal: boolean;
 }
 
-function VoiceAgentInner({
-  onDisconnect,
-  avatarEnabled = false,
-  livekitUrl,
-  livekitToken,
-  roomName,
-}: {
-  onDisconnect: () => void;
-  avatarEnabled?: boolean;
-  livekitUrl: string;
-  livekitToken: string;
-  roomName: string;
-}) {
+function upsertTranscriptMessage(
+  previous: TranscriptMessage[],
+  incoming: TranscriptMessage
+): TranscriptMessage[] {
+  const existingById = previous.findIndex((message) => message.id === incoming.id);
+  if (existingById >= 0) {
+    const updated = [...previous];
+    updated[existingById] = incoming;
+    return updated;
+  }
+
+  const activeIndex = [...previous]
+    .reverse()
+    .findIndex((message) => message.participant === incoming.participant && !message.isFinal);
+
+  if (activeIndex >= 0) {
+    const indexFromStart = previous.length - 1 - activeIndex;
+    const updated = [...previous];
+    updated[indexFromStart] = {
+      ...updated[indexFromStart],
+      text: incoming.text,
+      timestamp: incoming.timestamp,
+      isFinal: incoming.isFinal,
+    };
+    return updated;
+  }
+
+  return [...previous, incoming];
+}
+
+function VoiceAgentInner({ onDisconnect }: { onDisconnect: () => void }) {
   const room = useRoomContext();
   const { localParticipant } = useLocalParticipant();
   const [transcripts, setTranscripts] = useState<TranscriptMessage[]>([]);
@@ -63,11 +79,10 @@ function VoiceAgentInner({
       segments: TranscriptionSegment[],
       participant: { identity: string } | undefined
     ) => {
-      segments.forEach((segment) => {
-        const isAgent = participant?.identity?.includes('agent') ?? false;
+      const isAgent = participant?.identity?.includes('agent') ?? false;
 
-        setTranscripts((prev) => {
-          const existingIndex = prev.findIndex((t) => t.id === segment.id);
+      setTranscripts((prev) => {
+        return segments.reduce((messages, segment) => {
           const newMessage: TranscriptMessage = {
             id: segment.id,
             text: segment.text,
@@ -76,13 +91,8 @@ function VoiceAgentInner({
             isFinal: segment.final,
           };
 
-          if (existingIndex >= 0) {
-            const updated = [...prev];
-            updated[existingIndex] = newMessage;
-            return updated;
-          }
-          return [...prev, newMessage];
-        });
+          return upsertTranscriptMessage(messages, newMessage);
+        }, prev);
       });
     };
 
@@ -157,24 +167,8 @@ function VoiceAgentInner({
 
       {/* Main content */}
       <main className="flex-1 flex flex-col overflow-hidden">
-        {/* Content area - split layout when avatar enabled */}
-        <div className={`flex-1 overflow-hidden ${avatarEnabled ? 'flex' : 'flex flex-col'}`}>
-          {/* Avatar panel (left side when enabled) */}
-          {avatarEnabled && (
-            <div className="w-1/2 p-4 border-r border-slate-700">
-              <AvatarDisplay
-                className="h-full"
-                livekitUrl={livekitUrl}
-                livekitToken={livekitToken}
-                roomName={roomName}
-              />
-            </div>
-          )}
-
-          {/* Transcript area */}
-          <div className={`overflow-y-auto ${avatarEnabled ? 'w-1/2' : 'flex-1'}`}>
-            <TranscriptView transcripts={transcripts} />
-          </div>
+        <div className="flex-1 overflow-y-auto">
+          <TranscriptView transcripts={transcripts} />
         </div>
 
         {/* Voice activity and input */}
@@ -195,8 +189,6 @@ function VoiceAgentInner({
 }
 
 export default function VoiceAgent(props: VoiceAgentProps) {
-  const { avatarEnabled = false } = props;
-
   return (
     <LiveKitRoom
       token={props.token}
@@ -206,16 +198,8 @@ export default function VoiceAgent(props: VoiceAgentProps) {
       video={false}
       onDisconnected={props.onDisconnect}
     >
-      {/* Only render RoomAudioRenderer when avatar is NOT enabled */}
-      {/* Avatar publishes its own audio track, so we skip this to avoid duplicate audio */}
-      {!avatarEnabled && <RoomAudioRenderer />}
-      <VoiceAgentInner
-        onDisconnect={props.onDisconnect}
-        avatarEnabled={avatarEnabled}
-        livekitUrl={props.serverUrl}
-        livekitToken={props.token}
-        roomName={props.roomName}
-      />
+      <RoomAudioRenderer />
+      <VoiceAgentInner onDisconnect={props.onDisconnect} />
     </LiveKitRoom>
   );
 }

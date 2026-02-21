@@ -6,7 +6,7 @@ Uses:
 - Deepgram STT for speech-to-text
 - OpenAI-compatible LLM for conversation
 - Cartesia TTS for text-to-speech
-- Optional: SpatialReal Avatar for lip-synced video
+- SpatialReal Avatar for lip-synced video
 """
 
 import os
@@ -20,6 +20,7 @@ from livekit.agents import (
     AutoSubscribe,
     JobContext,
     RoomInputOptions,
+    RoomOutputOptions,
     WorkerOptions,
     cli,
 )
@@ -79,10 +80,6 @@ async def entrypoint(ctx: JobContext):
     for participant in ctx.room.remote_participants.values():
         _set_target_audio_subscription(participant)
 
-    # Check if avatar mode is enabled
-    avatar_enabled = os.getenv("AVATAR_ENABLED", "false").lower() == "true"
-    logger.info(f"Avatar enabled: {avatar_enabled}")
-
     # Silero VAD for voice activity detection
     vad = silero.VAD.load()
 
@@ -106,6 +103,7 @@ async def entrypoint(ctx: JobContext):
         model=os.getenv("CARTESIA_MODEL", "sonic-2"),
         language=os.getenv("CARTESIA_LANGUAGE", "en"),
         voice=os.getenv("CARTESIA_VOICE", "f786b574-daa5-4673-aa0c-cbe3e8534c02"),
+        sample_rate=16000,
     )
 
     # Create agent session with pipeline components
@@ -116,12 +114,10 @@ async def entrypoint(ctx: JobContext):
         tts=tts,
     )
 
-    # Setup avatar if enabled
-    if avatar_enabled:
-        logger.info("Avatar mode enabled, initializing avatar session...")
-        avatar = AvatarSession()
-        await avatar.start(session, room=ctx.room)
-        logger.info("Avatar session started")
+    logger.info("Initializing avatar session...")
+    avatar = AvatarSession()
+    await avatar.start(session, room=ctx.room)
+    logger.info("Avatar session started")
 
     # Event handlers for logging
     @session.on("agent_state_changed")
@@ -142,8 +138,7 @@ async def entrypoint(ctx: JobContext):
 
     # Start the session
     logger.info(
-        "Starting agent session with pipeline: Silero VAD + Deepgram STT + OpenAI LLM + Cartesia TTS"
-        + (" + SpatialReal Avatar" if avatar_enabled else "")
+        "Starting agent session with pipeline: Silero VAD + Deepgram STT + OpenAI LLM + Cartesia TTS + SpatialReal Avatar"
     )
     await session.start(
         agent=VoiceAssistant(),
@@ -151,10 +146,13 @@ async def entrypoint(ctx: JobContext):
         room_input_options=RoomInputOptions(
             participant_identity=BROWSER_PARTICIPANT_IDENTITY,
         ),
+        room_output_options=RoomOutputOptions(
+            sync_transcription=False,
+        ),
     )
 
     # Send initial greeting
-    await session.say("你好！我是你的语音助手，有什么可以帮到你的吗？")
+    await session.say("Hi there! I'm your voice assistant. How can I help you today?")
 
 
 if __name__ == "__main__":
