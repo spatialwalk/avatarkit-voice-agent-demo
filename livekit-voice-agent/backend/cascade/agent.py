@@ -75,6 +75,7 @@ async def entrypoint(ctx: JobContext):
         voice=os.getenv("CARTESIA_VOICE", "f786b574-daa5-4673-aa0c-cbe3e8534c02"),
         sample_rate=16000,
     )
+    logger.info("tts sample rate: %d", tts.sample_rate)
 
     # Create agent session with pipeline components
     session = AgentSession(

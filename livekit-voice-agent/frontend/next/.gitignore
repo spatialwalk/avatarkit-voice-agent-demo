@@ -1,0 +1,15 @@
+# dependencies
+node_modules/
+
+# next.js build output
+.next/
+out/
+
+# local env files
+.env
+
+# logs
+*.log
+
+# macOS
+.DS_Store
