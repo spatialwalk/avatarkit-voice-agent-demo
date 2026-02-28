@@ -11,5 +11,9 @@ out/
 # logs
 *.log
 
+*.wasm
+
 # macOS
 .DS_Store
+
+public/_avatarkit/
