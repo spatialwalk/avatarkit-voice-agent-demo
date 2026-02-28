@@ -60,6 +60,9 @@ export default function AvatarVoiceAgent({
   const [transcripts, setTranscripts] = useState<TranscriptMessage[]>([]);
   const [isAgentSpeaking, setIsAgentSpeaking] = useState(false);
   const [micTrack, setMicTrack] = useState<Track | undefined>(undefined);
+  const [isAvatarFullscreen, setIsAvatarFullscreen] = useState(false);
+
+  const isChatVisible = !isAvatarFullscreen;
 
   const teardownAvatar = useCallback(async () => {
     if (teardownTaskRef.current) {
@@ -305,6 +308,10 @@ export default function AvatarVoiceAgent({
     onDisconnect();
   }, [onDisconnect, teardownAvatar]);
 
+  const handleToggleAvatarFullscreen = useCallback(() => {
+    setIsAvatarFullscreen((prev) => !prev);
+  }, []);
+
   return (
     <div className="flex h-screen flex-col">
       <header className="flex items-center justify-between bg-slate-800 px-6 py-4">
@@ -316,6 +323,12 @@ export default function AvatarVoiceAgent({
               Agent speaking
             </span>
           )}
+          <button
+            onClick={handleToggleAvatarFullscreen}
+            className="rounded-lg bg-blue-600 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-700"
+          >
+            {isAvatarFullscreen ? "Exit fullscreen" : "Fullscreen avatar"}
+          </button>
           <button
             onClick={() => {
               void handleDisconnect();
@@ -329,9 +342,24 @@ export default function AvatarVoiceAgent({
 
       <main className="flex flex-1 flex-col overflow-hidden">
         <div className="flex flex-1 overflow-hidden">
-          <div className="w-1/2 border-r border-slate-700 p-4">
-            <div className="relative h-full overflow-hidden rounded-lg bg-slate-900">
-              <div ref={setContainerRef} className="h-full min-h-[400px] w-full" />
+          <div
+            className={
+              isChatVisible
+                ? "w-1/2 border-r border-slate-700 p-4"
+                : isAvatarFullscreen
+                  ? "w-full p-0"
+                  : "w-full p-4"
+            }
+          >
+            <div
+              className={`relative h-full overflow-hidden bg-slate-900 ${
+                isAvatarFullscreen ? "" : "rounded-lg"
+              }`}
+            >
+              <div
+                ref={setContainerRef}
+                className={`h-full w-full ${isAvatarFullscreen ? "" : "min-h-[400px]"}`}
+              />
 
               {isLoading && (
                 <div className="absolute inset-0 flex items-center justify-center bg-slate-900/80">
@@ -353,20 +381,24 @@ export default function AvatarVoiceAgent({
             </div>
           </div>
 
-          <div className="w-1/2 overflow-y-auto">
-            <TranscriptView transcripts={transcripts} />
-          </div>
-        </div>
-
-        <div className="border-t border-slate-700 bg-slate-800 p-4">
-          <div className="mx-auto max-w-3xl">
-            <div className="mb-4 flex justify-center">
-              <AudioVisualizer track={micTrack} />
+          {isChatVisible && (
+            <div className="w-1/2 overflow-y-auto">
+              <TranscriptView transcripts={transcripts} />
             </div>
-
-            <ChatInput onSend={handleSendMessage} />
-          </div>
+          )}
         </div>
+
+        {isChatVisible && (
+          <div className="border-t border-slate-700 bg-slate-800 p-4">
+            <div className="mx-auto max-w-3xl">
+              <div className="mb-4 flex justify-center">
+                <AudioVisualizer track={micTrack} />
+              </div>
+
+              <ChatInput onSend={handleSendMessage} />
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
