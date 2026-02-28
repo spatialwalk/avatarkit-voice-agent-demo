@@ -1,13 +1,10 @@
 import { useState, useCallback } from 'react';
 import AvatarVoiceAgent from './components/AvatarVoiceAgent';
 
-const BROWSER_PARTICIPANT_IDENTITY = 'browser-user';
-
 interface ConnectionInfo {
   token: string;
   url: string;
   room: string;
-  identity: string;
 }
 
 function App() {
@@ -27,7 +24,6 @@ function App() {
         },
         body: JSON.stringify({
           room: 'voice-agent-room',
-          identity: BROWSER_PARTICIPANT_IDENTITY,
         }),
       });
 

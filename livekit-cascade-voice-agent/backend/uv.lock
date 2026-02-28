@@ -267,7 +267,7 @@ wheels = [
 
 [[package]]
 name = "avatarkit"
-version = "0.1.3"
+version = "0.1.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
@@ -275,9 +275,9 @@ dependencies = [
     { name = "protobuf" },
     { name = "websockets" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/3b/f8/bbd50cc7e145e160cd852c9e1341f00a547740e989c9668f54692107cd95/avatarkit-0.1.3.tar.gz", hash = "sha256:5cac2457e66d0d69486c7b43e0d8c4b16b3c29c758d3a18f05e75e012a73f5de", size = 13034, upload-time = "2026-01-31T15:44:09.897Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ec/0a/022230453f0d95bf273989b6494cb3122230620af997e8a3524c2938ccbc/avatarkit-0.1.4.tar.gz", hash = "sha256:ddd7691fd5130e237f5ee3fa7ebcdd7dad1d052c6363ba5ed872f04f08633d4c", size = 13587, upload-time = "2026-02-24T08:30:08.478Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/1c/4d/99ace08190e28c0369ca31bbc6e7e1e330307a2f24a5dfdf452a54871133/avatarkit-0.1.3-py3-none-any.whl", hash = "sha256:6de6c2803f5b2e0216c33d34306723c6176d9986b420becdc316b7acc633373e", size = 16240, upload-time = "2026-01-31T15:44:11.125Z" },
+    { url = "https://files.pythonhosted.org/packages/2d/02/13c89a6395ab84d9f12ab0cfc96613a6ce40b52b2b8366dfa142d2acaec9/avatarkit-0.1.4-py3-none-any.whl", hash = "sha256:1770f4d71d93259df9f05eddce3c0f64ff55f4afa591267bd5e9733d8d41ad93", size = 16621, upload-time = "2026-02-24T08:30:07.215Z" },
 ]
 
 [[package]]
@@ -1139,15 +1139,15 @@ wheels = [
 
 [[package]]
 name = "livekit-plugins-spatialreal"
-version = "1.4.0"
+version = "1.4.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "avatarkit" },
     { name = "livekit-agents" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/fd/20/eae62fc1119507c062e0580247ace49c3768ea388cbfcfd39b404bfa03ca/livekit_plugins_spatialreal-1.4.0.tar.gz", hash = "sha256:73cb81def7e7c59928146a2e37649c022474aebe563cfec43b4b9af9f7640958", size = 7673, upload-time = "2026-02-09T18:41:15.209Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/45/b9/8240cf41d147901f84912db14ab28f5313192f8705bda04dfca9a9e94aac/livekit_plugins_spatialreal-1.4.3.tar.gz", hash = "sha256:9628eb439dc245b2f9adc7f0b13e69dfdd4211ec5048a2b36f42c884e449134f", size = 7973, upload-time = "2026-02-24T08:34:35.036Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a5/da/a0d67f26732614cd62ab6ade596ce4a22cff7d234f469e5b7dec995f67f9/livekit_plugins_spatialreal-1.4.0-py3-none-any.whl", hash = "sha256:c9cad9384df5acbfe6b18b826765161eca1ca45825012710259ef201e90a0ccb", size = 7632, upload-time = "2026-02-09T18:41:14.205Z" },
+    { url = "https://files.pythonhosted.org/packages/42/df/6081f3aa4119b3af22ccf3ef3b7267e28abff5b4db1867c75d4cd2555f21/livekit_plugins_spatialreal-1.4.3-py3-none-any.whl", hash = "sha256:e98a916ec93f5ecb5064ca8b99bb5b13a2e113c88e69059cd022917114f2bfd2", size = 7973, upload-time = "2026-02-24T08:34:34.005Z" },
 ]
 
 [[package]]
@@ -2375,7 +2375,7 @@ requires-dist = [
     { name = "livekit-plugins-deepgram", specifier = "==1.4.2" },
     { name = "livekit-plugins-openai", specifier = "==1.4.2" },
     { name = "livekit-plugins-silero", specifier = "==1.4.2" },
-    { name = "livekit-plugins-spatialreal", specifier = ">=1.4.0" },
+    { name = "livekit-plugins-spatialreal", specifier = ">=1.4.3" },
     { name = "python-dotenv", specifier = ">=1.0.0" },
 ]
 

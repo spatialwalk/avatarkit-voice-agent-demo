@@ -7,6 +7,7 @@ Provides JWT tokens for frontend clients to connect to LiveKit rooms.
 import asyncio
 import os
 from datetime import timedelta
+from uuid import uuid4
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from livekit import api
@@ -21,7 +22,6 @@ CORS(app)
 LIVEKIT_API_KEY = os.getenv("LIVEKIT_API_KEY")
 LIVEKIT_API_SECRET = os.getenv("LIVEKIT_API_SECRET")
 LIVEKIT_URL = os.getenv("LIVEKIT_URL")
-BROWSER_PARTICIPANT_IDENTITY = "browser-user"
 
 
 async def create_room_and_dispatch_agent(room_name: str):
@@ -47,9 +47,13 @@ def generate_token():
     """Generate a LiveKit access token for a participant."""
     data = request.get_json() or {}
 
-    # Keep browser identity fixed so the agent can target subscriptions.
     room_name = data.get("room", "voice-agent-room")
-    participant_identity = BROWSER_PARTICIPANT_IDENTITY
+    requested_identity = data.get("identity")
+    participant_identity = (
+        requested_identity.strip()
+        if isinstance(requested_identity, str) and requested_identity.strip()
+        else f"browser-{uuid4().hex[:8]}"
+    )
 
     if not LIVEKIT_API_KEY or not LIVEKIT_API_SECRET:
         return jsonify({"error": "LiveKit credentials not configured"}), 500
