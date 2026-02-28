@@ -64,9 +64,7 @@ export default function AvatarDisplay({
       // Initialize SDK with Host Mode (required for RTC integration)
       if (!AvatarSDK.isInitialized) {
         await AvatarSDK.initialize(import.meta.env.VITE_SPATIALREAL_APP_ID, {
-          environment: import.meta.env.VITE_SPATIALREAL_ENVIRONMENT === 'intl'
-            ? Environment.intl
-            : Environment.cn,
+          environment: Environment.intl,
           drivingServiceMode: DrivingServiceMode.host,
         });
       }

@@ -150,9 +150,7 @@ export default function AvatarVoiceAgent({
       // Initialize SDK with Host Mode
       if (!AvatarSDK.isInitialized) {
         await AvatarSDK.initialize(import.meta.env.VITE_SPATIALREAL_APP_ID, {
-          environment: import.meta.env.VITE_SPATIALREAL_ENVIRONMENT === 'intl'
-            ? Environment.intl
-            : Environment.cn,
+          environment: Environment.intl,
           drivingServiceMode: DrivingServiceMode.host,
         });
       }
