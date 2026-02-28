@@ -19,7 +19,16 @@ livekit-voice-agent/
     └── end-to-end/
 ```
 
-## 1) Frontend setup
+## Choose your pair (required)
+
+For local usage, pick exactly:
+
+- **ONE frontend**: `frontend/vite-react-spa` or `frontend/next`
+- **ONE backend**: `backend/cascade` or `backend/end-to-end`
+
+Then run only that selected frontend + backend pair.
+
+## 1) Pick and set up ONE frontend
 
 Choose one frontend implementation.
 
@@ -55,7 +64,7 @@ NEXT_PUBLIC_SPATIALREAL_AVATAR_ID=your_avatar_id
 
 Get your SpatialReal app/avatar credentials at: https://app.spatialreal.ai/
 
-## 2) Backend setup
+## 2) Pick and set up ONE backend
 
 Choose one backend implementation.
 
@@ -97,7 +106,9 @@ For SpatialReal credentials (API key, app ID, avatar ID), use: https://app.spati
 
 ## 3) Run locally
 
-Start backend processes from the backend you selected above:
+Run only the frontend/backend pair you selected above.
+
+Start backend processes from your selected backend:
 
 ```bash
 cd backend/<cascade-or-end-to-end>
