@@ -2856,7 +2856,7 @@ requires-dist = [
     { name = "flask", specifier = ">=3.0.0" },
     { name = "flask-cors", specifier = ">=4.0.0" },
     { name = "livekit-agents", specifier = "==1.4.3" },
-    { name = "livekit-api", specifier = ">=0.6.0" },
+    { name = "livekit-api", specifier = ">=1.1.0" },
     { name = "livekit-plugins-aws", extras = ["realtime"], specifier = "==1.4.3" },
     { name = "livekit-plugins-google", specifier = "==1.4.3" },
     { name = "livekit-plugins-openai", specifier = "==1.4.3" },
