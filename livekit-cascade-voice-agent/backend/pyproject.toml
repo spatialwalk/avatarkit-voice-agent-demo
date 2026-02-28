@@ -13,5 +13,5 @@ dependencies = [
     "livekit-plugins-deepgram==1.4.2",
     "livekit-plugins-cartesia==1.4.2",
     "python-dotenv>=1.0.0",
-    "livekit-plugins-spatialreal>=1.4.0",
+    "livekit-plugins-spatialreal>=1.4.3",
 ]
