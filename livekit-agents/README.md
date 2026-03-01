@@ -1,4 +1,4 @@
-# LiveKit Voice Agent Demos
+# LiveKit Agents Demos
 
 Two backend agent demos and two frontend demos that share the same core semantics:
 
@@ -10,7 +10,7 @@ Two backend agent demos and two frontend demos that share the same core semantic
 ## Project structure
 
 ```text
-livekit-voice-agent/
+livekit-agents/
 ├── frontend/
 │   ├── vite-react-spa/
 │   └── next/
