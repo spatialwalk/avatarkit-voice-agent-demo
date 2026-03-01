@@ -1,5 +1,5 @@
 {
-  "name": "livekit-voice-agent-frontend-vite-react-spa",
+  "name": "livekit-agents-frontend-vite-react-spa",
   "private": true,
   "version": "1.0.0",
   "type": "module",
