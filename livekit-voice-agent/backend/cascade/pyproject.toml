@@ -13,5 +13,5 @@ dependencies = [
     "livekit-plugins-deepgram==1.4.3",
     "livekit-plugins-cartesia==1.4.3",
     "python-dotenv>=1.0.0",
-    "livekit-plugins-spatialreal>=1.4.3",
+    "livekit-plugins-spatialreal @ git+https://github.com/spatialwalk/livekit-plugins-spatialreal.git@main",
 ]

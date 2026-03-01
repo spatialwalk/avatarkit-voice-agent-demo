@@ -1516,14 +1516,10 @@ wheels = [
 [[package]]
 name = "livekit-plugins-spatialreal"
 version = "1.4.3"
-source = { registry = "https://pypi.org/simple" }
+source = { git = "https://github.com/spatialwalk/livekit-plugins-spatialreal.git?rev=main#f3587f2303d24ddb49f40b9edda847ff1fff0cab" }
 dependencies = [
     { name = "avatarkit" },
     { name = "livekit-agents" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/45/b9/8240cf41d147901f84912db14ab28f5313192f8705bda04dfca9a9e94aac/livekit_plugins_spatialreal-1.4.3.tar.gz", hash = "sha256:9628eb439dc245b2f9adc7f0b13e69dfdd4211ec5048a2b36f42c884e449134f", size = 7973, upload-time = "2026-02-24T08:34:35.036Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/42/df/6081f3aa4119b3af22ccf3ef3b7267e28abff5b4db1867c75d4cd2555f21/livekit_plugins_spatialreal-1.4.3-py3-none-any.whl", hash = "sha256:e98a916ec93f5ecb5064ca8b99bb5b13a2e113c88e69059cd022917114f2bfd2", size = 7973, upload-time = "2026-02-24T08:34:34.005Z" },
 ]
 
 [[package]]
@@ -2860,7 +2856,7 @@ requires-dist = [
     { name = "livekit-plugins-aws", extras = ["realtime"], specifier = "==1.4.3" },
     { name = "livekit-plugins-google", specifier = "==1.4.3" },
     { name = "livekit-plugins-openai", specifier = "==1.4.3" },
-    { name = "livekit-plugins-spatialreal", specifier = ">=1.4.3" },
+    { name = "livekit-plugins-spatialreal", git = "https://github.com/spatialwalk/livekit-plugins-spatialreal.git?rev=main" },
     { name = "livekit-plugins-ultravox", specifier = "==1.4.3" },
     { name = "livekit-plugins-xai", specifier = "==1.4.3" },
     { name = "python-dotenv", specifier = ">=1.0.0" },
