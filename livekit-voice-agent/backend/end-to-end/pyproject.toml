@@ -13,6 +13,6 @@ dependencies = [
     "livekit-plugins-aws[realtime]==1.4.3",
     "livekit-plugins-ultravox==1.4.3",
     "livekit-plugins-xai==1.4.3",
-    "livekit-plugins-spatialreal>=1.4.3",
+    "livekit-plugins-spatialreal @ git+https://github.com/spatialwalk/livekit-plugins-spatialreal.git@main",
     "python-dotenv>=1.0.0",
 ]
