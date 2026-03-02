@@ -113,9 +113,6 @@ async def entrypoint(ctx: JobContext):
     await session.start(
         agent=VoiceAssistant(),
         room=ctx.room,
-        room_output_options=RoomOutputOptions(
-            sync_transcription=False,
-        ),
     )
 
     # Send initial greeting
