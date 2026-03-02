@@ -1516,7 +1516,7 @@ wheels = [
 [[package]]
 name = "livekit-plugins-spatialreal"
 version = "1.4.3"
-source = { git = "https://github.com/spatialwalk/livekit-plugins-spatialreal.git?rev=main#f3587f2303d24ddb49f40b9edda847ff1fff0cab" }
+source = { git = "https://github.com/spatialwalk/livekit-plugins-spatialreal.git?rev=main#9105bb0daee2d6a2e6c032f9fe34c8110f56ecc7" }
 dependencies = [
     { name = "avatarkit" },
     { name = "livekit-agents" },
