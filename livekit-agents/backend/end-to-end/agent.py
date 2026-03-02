@@ -19,7 +19,6 @@ from livekit.agents import (
     AgentSession,
     AutoSubscribe,
     JobContext,
-    RoomOutputOptions,
     WorkerOptions,
     cli,
 )
