@@ -1,0 +1,23 @@
+{
+  "name": "spatialreal-agent-quickstart-frontend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@spatialwalk/avatarkit": "latest",
+    "@spatialwalk/avatarkit-rtc": "latest",
+    "livekit-client": "2.16.1",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "typescript": "~5.6.2",
+    "vite": "^5.4.10",
+    "vue-tsc": "^2.1.8"
+  }
+}
