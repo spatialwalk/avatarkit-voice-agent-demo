@@ -18,9 +18,9 @@ End-to-end voice agent quickstart with:
 - pnpm
 - Python 3.10+
 - uv
-- LiveKit Cloud credentials
-- Google Gemini API key
-- SpatialReal credentials
+- LiveKit Cloud credentials (https://cloud.livekit.io)
+- Google Gemini API key (https://aistudio.google.com/api-keys)
+- SpatialReal credentials (https://app.spatialreal.ai/apps)
 
 ## Setup
 

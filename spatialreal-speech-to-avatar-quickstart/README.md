@@ -12,9 +12,9 @@ This demo provides two explicit actions:
 - Node.js 18+
 - pnpm
 - SpatialReal Studio values:
-  - `VITE_SPATIALREAL_APP_ID`
-  - `VITE_SPATIALREAL_AVATAR_ID`
-  - `VITE_SPATIALREAL_SESSION_TOKEN` (temporary token)
+  - `VITE_SPATIALREAL_APP_ID` (https://app.spatialreal.ai/apps)
+  - `VITE_SPATIALREAL_AVATAR_ID` (https://app.spatialreal.ai/avatars/library)
+  - `VITE_SPATIALREAL_SESSION_TOKEN` (https://app.spatialreal.ai/apps) [Instruction](https://docs.spatialreal.ai/studio/aki-key#temporary-session-token)
 
 ## Setup
 
@@ -35,9 +35,8 @@ Open `http://localhost:3000`, click **Connect Avatar**, then click **Send Audio*
 
 ## Demo Audio Source
 
-The app uses this fixed PCM URL:
+The demo using a fixed mono 16kHZ PCM audio file fetched from the URL
 
-`https://cdn.spatialwalk.cloud/public/website/quickstart_voice.pcm`
 
 ## Project Structure
 
