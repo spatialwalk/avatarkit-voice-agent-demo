@@ -9,10 +9,10 @@
     "skipLibCheck": true,
 
     /* Bundler mode */
+    "baseUrl": ".",
     "moduleResolution": "bundler",
     "paths": {
-      "@avatarkit-react": ["../../../../avatarkit-react/src/lib/index.ts"],
-      "@avatarkit-react/*": ["../../../../avatarkit-react/src/lib/*"]
+      "@/*": ["./src/*"]
     },
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
