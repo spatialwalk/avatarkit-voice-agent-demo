@@ -9,7 +9,11 @@
     "skipLibCheck": true,
 
     /* Bundler mode */
+    "baseUrl": ".",
     "moduleResolution": "bundler",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
