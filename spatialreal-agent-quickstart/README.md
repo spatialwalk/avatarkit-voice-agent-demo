@@ -2,7 +2,7 @@
 
 End-to-end voice agent quickstart with:
 
-- Frontend: Vue + AvatarKit RTC + LiveKit client
+- Frontend: React + AvatarKit UI components + LiveKit client
 - Backend: Flask token server + LiveKit Agents worker + SpatialReal plugin
 
 ## Architecture
@@ -10,7 +10,7 @@ End-to-end voice agent quickstart with:
 - Frontend requests `/token` from backend
 - Backend returns LiveKit JWT and dispatches `voice-assistant`
 - Agent worker joins room and starts Gemini Live + SpatialReal avatar session
-- Frontend connects to LiveKit and renders avatar with `AvatarPlayer`
+- Frontend connects to LiveKit and renders avatar with `SpatialRealAvatarProvider`
 
 ## Prerequisites
 
@@ -42,6 +42,13 @@ uv sync
 cd ../frontend
 pnpm install
 ```
+
+The frontend already includes:
+
+- `src/components/spatialreal-avatar/*`
+- `src/components/ui/button.tsx`
+
+So you do not need to run extra `shadcn add` commands for this quickstart.
 
 ## Run
 
@@ -80,11 +87,20 @@ spatialreal-agent-quickstart/
     ├── .env.example
     ├── index.html
     ├── package.json
+    ├── components.json
     ├── src/
-    │   ├── App.vue
-    │   ├── env.d.ts
-    │   ├── main.ts
-    │   └── style.css
+    │   ├── App.tsx
+    │   ├── main.tsx
+    │   ├── index.css
+    │   ├── hooks/
+    │   │   └── useSpatialRealAvatar.ts
+    │   ├── lib/
+    │   │   └── utils.ts
+    │   ├── types/
+    │   │   └── spatialreal-avatar.ts
+    │   └── components/
+    │       ├── spatialreal-avatar/
+    │       └── ui/
     ├── tsconfig.app.json
     ├── tsconfig.json
     ├── tsconfig.node.json
