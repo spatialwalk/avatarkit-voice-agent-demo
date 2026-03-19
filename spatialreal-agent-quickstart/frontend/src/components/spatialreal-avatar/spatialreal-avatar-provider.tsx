@@ -31,7 +31,7 @@ export function SpatialRealAvatarProvider({
     } finally {
       onDisconnect?.()
     }
-  }, [avatar, onDisconnect])
+  }, [avatar.disconnect, onDisconnect])
 
   const session = useMemo(
     () => ({
