@@ -11,7 +11,7 @@ import {
   SpatialRealAvatarProvider,
   SpatialRealAvatarStatus,
   useSpatialRealAvatarContext,
-} from './components/spatialreal-avatar'
+} from '@/components/spatialreal-avatar'
 
 type AvatarConnection = {
   url: string
