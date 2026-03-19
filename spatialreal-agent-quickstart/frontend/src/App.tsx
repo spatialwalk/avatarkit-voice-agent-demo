@@ -56,14 +56,14 @@ function AvatarPanel({ onExit }: { onExit: () => void }) {
   }
 
   return (
-    <div style={{ width: 'min(760px, 100%)', display: 'flex', flexDirection: 'column', gap: 12 }}>
-      <SpatialRealAvatarFrame style={{ overflow: 'hidden' }}>
+    <div className="flex w-full max-w-[760px] flex-col gap-3">
+      <SpatialRealAvatarFrame className="overflow-hidden">
         <SpatialRealAvatarCanvas minHeight={420} />
         <SpatialRealAvatarLoading />
         <SpatialRealAvatarError />
       </SpatialRealAvatarFrame>
 
-      <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+      <div className="flex flex-wrap items-center gap-2">
         <Button disabled={!avatar.isConnected || pending} onClick={() => void toggleMic()} type="button">
           {avatar.isPublishingMicrophone ? 'Stop Mic' : 'Start Mic'}
         </Button>
@@ -74,7 +74,7 @@ function AvatarPanel({ onExit }: { onExit: () => void }) {
 
         <SpatialRealAvatarStatus />
 
-        <span style={{ fontSize: 14 }}>
+        <span className="text-sm">
           {avatar.error ? avatar.error.message : avatar.isConnected ? 'Connected. Start speaking.' : 'Connecting...'}
         </span>
       </div>
@@ -129,11 +129,11 @@ export default function App() {
   }
 
   if (!appId || !avatarId) {
-    return <div style={{ padding: 16 }}>Missing required environment variables. Check `.env`.</div>
+    return <div className="p-4">Missing required environment variables. Check `.env`.</div>
   }
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
+    <div className="flex min-h-screen items-center justify-center p-4">
       {connection ? (
         <SpatialRealAvatarProvider
           appId={appId}
@@ -146,11 +146,11 @@ export default function App() {
           <AvatarPanel onExit={() => setConnection(null)} />
         </SpatialRealAvatarProvider>
       ) : (
-        <div style={{ width: 'min(560px, 100%)', display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div className="flex w-full max-w-[560px] flex-col gap-2.5">
           <Button disabled={connecting} onClick={() => void requestConnection()} type="button">
             {connecting ? 'Connecting...' : 'Connect'}
           </Button>
-          <span style={{ fontSize: 14 }}>{status}</span>
+          <span className="text-sm">{status}</span>
         </div>
       )}
     </div>
