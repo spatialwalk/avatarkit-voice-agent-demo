@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import '@livekit/components-styles'
 import { Button } from '@/components/ui/button'
+import { Track } from 'livekit-client'
 
 import {
   SpatialRealAvatarCanvas,
@@ -27,16 +28,21 @@ type TokenResponse = {
 function AvatarPanel({ onExit }: { onExit: () => void }) {
   const avatar = useSpatialRealAvatarContext()
   const [pending, setPending] = useState(false)
+  const micPublication = avatar.room?.localParticipant.getTrackPublication(Track.Source.Microphone)
+  const hasPublishedMic = Boolean(micPublication?.track)
+  const isMicMuted = micPublication?.isMuted ?? false
 
-  const toggleMic = async () => {
+  const toggleMicrophone = async () => {
     if (pending || !avatar.isConnected) return
     setPending(true)
 
     try {
-      if (avatar.isPublishingMicrophone) {
-        await avatar.stopPublishingMicrophone()
-      } else {
+      if (!hasPublishedMic) {
         await avatar.startPublishingMicrophone()
+      } else if (isMicMuted) {
+        await micPublication?.unmute()
+      } else {
+        await micPublication?.mute()
       }
     } finally {
       setPending(false)
@@ -64,8 +70,8 @@ function AvatarPanel({ onExit }: { onExit: () => void }) {
       </SpatialRealAvatarFrame>
 
       <div className="flex flex-wrap items-center gap-2">
-        <Button disabled={!avatar.isConnected || pending} onClick={() => void toggleMic()} type="button">
-          {avatar.isPublishingMicrophone ? 'Stop Mic' : 'Start Mic'}
+        <Button disabled={!avatar.isConnected || pending} onClick={() => void toggleMicrophone()} type="button">
+          {!hasPublishedMic ? 'Enable Mic' : isMicMuted ? 'Unmute Mic' : 'Mute Mic'}
         </Button>
 
         <Button disabled={pending} onClick={() => void disconnect()} type="button" variant="outline">
@@ -75,7 +81,15 @@ function AvatarPanel({ onExit }: { onExit: () => void }) {
         <SpatialRealAvatarStatus />
 
         <span className="text-sm">
-          {avatar.error ? avatar.error.message : avatar.isConnected ? 'Connected. Start speaking.' : 'Connecting...'}
+          {avatar.error
+            ? avatar.error.message
+            : avatar.isConnected
+              ? !hasPublishedMic
+                ? 'Connected. Mic is off, enable mic to talk.'
+                : isMicMuted
+                  ? 'Connected. Mic is muted.'
+                  : 'Connected. Mic is on, start speaking.'
+              : 'Connecting...'}
         </span>
       </div>
     </div>
@@ -139,11 +153,16 @@ export default function App() {
           appId={appId}
           avatarId={avatarId}
           connection={connection}
-          onConnected={() => setStatus('Connected. Click Start Mic to talk.')}
+          onConnected={() => setStatus('Connected. Click Enable Mic to talk.')}
           onDisconnected={() => setStatus('Disconnected')}
           onAvatarError={(error) => setStatus(error.message)}
         >
-          <AvatarPanel onExit={() => setConnection(null)} />
+          <AvatarPanel
+            onExit={() => {
+              setConnection(null)
+              setStatus('Disconnected')
+            }}
+          />
         </SpatialRealAvatarProvider>
       ) : (
         <div className="flex w-full max-w-[560px] flex-col gap-2.5">
