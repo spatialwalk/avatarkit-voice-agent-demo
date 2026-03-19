@@ -5,19 +5,34 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build",
+    "build": "tsc -b && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@spatialwalk/avatarkit": "latest",
-    "@spatialwalk/avatarkit-rtc": "latest",
+    "@base-ui/react": "^1.3.0",
+    "@fontsource-variable/geist": "^5.2.8",
+    "@livekit/components-react": "^2.0.0",
+    "@livekit/components-styles": "^1.1.6",
+    "@spatialwalk/avatarkit": "1.0.0-beta.75",
+    "@spatialwalk/avatarkit-rtc": "1.0.0-beta.7",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "livekit-client": "2.16.1",
-    "vue": "^3.5.13"
+    "lucide-react": "^0.577.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "shadcn": "^4.0.6",
+    "tailwind-merge": "^3.5.0",
+    "tw-animate-css": "^1.4.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.2.1",
-    "typescript": "~5.6.2",
-    "vite": "^5.4.10",
-    "vue-tsc": "^2.1.8"
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/node": "^24.3.0",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "@vitejs/plugin-react": "^5.0.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "~5.9.2",
+    "vite": "^7.1.0"
   }
 }
