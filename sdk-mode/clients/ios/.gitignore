@@ -1,0 +1,7 @@
+AvatarKit.xcframework/
+AvatarKit.xcframework.zip
+.avatarkit_checksum
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+DerivedData/
+.build/

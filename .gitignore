@@ -1,1 +1,44 @@
 .DS_Store
+**/.DS_Store
+
+# Node / frontend
+**/node_modules/
+**/dist/
+**/dist-ssr/
+**/.next/
+**/out/
+**/.vite/
+**/public/_avatarkit/
+
+# Env / secrets
+**/.env
+
+# Python
+**/.venv/
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.egg-info/
+**/build/
+**/wheels/
+
+# TypeScript
+**/tsconfig.tsbuildinfo
+
+# Logs
+**/*.log
+**/pnpm-debug.log*
+
+# Android
+**/.gradle/
+**/local.properties
+
+# iOS
+**/xcuserdata/
+**/.avatarkit_checksum
+**/*.xcframework/
+
+# Local tools / editor
+.specstory/
+.cursorindexingignore
+.claude/

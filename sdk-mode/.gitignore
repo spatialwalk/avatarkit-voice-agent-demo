@@ -1,0 +1,23 @@
+# OS
+.DS_Store
+**/.DS_Store
+
+# Env / secrets
+**/.env
+
+# Node / frontend
+**/node_modules/
+**/dist/
+*.tsbuildinfo
+
+# Python
+**/.venv/
+
+# Android / Gradle
+**/.gradle/
+**/build/
+**/local.properties
+
+# IDE
+.idea/
+.vscode/
