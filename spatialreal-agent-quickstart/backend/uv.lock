@@ -242,7 +242,7 @@ wheels = [
 
 [[package]]
 name = "avatarkit"
-version = "0.1.6"
+version = "0.1.7"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
@@ -250,9 +250,9 @@ dependencies = [
     { name = "protobuf" },
     { name = "websockets" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e2/be/9973af61eda5ba5393c340d131448821bdff30d7540829dfc79daf6db01e/avatarkit-0.1.6.tar.gz", hash = "sha256:f5a7317b2e7b84726423f2ee523160beb8b8b6c9683316020db7f6262ce4a3ea", size = 22704, upload-time = "2026-03-19T07:27:58.876Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/76/65/9a43248e1a84bed5c0e033dfe16d69fba898a8c489451e865d64813f4245/avatarkit-0.1.7.tar.gz", hash = "sha256:892db0b8f551208902471571314460eed348811b997d34f7f0bea5b97c462cea", size = 23199, upload-time = "2026-03-22T10:05:24.829Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a6/cf/4e784fe4816c9ee6bb77d56752c3bbca2d922cd31facc04f4f444e4ebb7f/avatarkit-0.1.6-py3-none-any.whl", hash = "sha256:e8df59a8a21412f24c67e7552cbb005e78f78ba0d4aa0d1668b5cbbd33c2d710", size = 25534, upload-time = "2026-03-19T07:27:59.829Z" },
+    { url = "https://files.pythonhosted.org/packages/39/e4/6990fab3517a444a8882d0b79061f531d2771d30184d37ed9595a86ceedf/avatarkit-0.1.7-py3-none-any.whl", hash = "sha256:bafc585a6a11d08391178075ed7265c942cd17c3dff2ea06cdc0b9b0e4601023", size = 26018, upload-time = "2026-03-22T10:05:23.64Z" },
 ]
 
 [[package]]
@@ -1109,7 +1109,7 @@ wheels = [
 
 [[package]]
 name = "livekit-agents"
-version = "1.4.4"
+version = "1.4.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiofiles" },
@@ -1142,9 +1142,9 @@ dependencies = [
     { name = "typing-extensions" },
     { name = "watchfiles" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/39/52/a561e264974778738e20fcd06eb9c81bb3f083d3d5955aeb15b31c07b4ab/livekit_agents-1.4.4.tar.gz", hash = "sha256:0048f76881a8840f4aa6eb9dad9e5ff5c196ba88fe25142900dcdd3fa8d7bb61", size = 2412761, upload-time = "2026-03-03T01:11:36.097Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/9c/06/1a23902ffea2742e60e30f957f3a96766be125892a2573ea1754051b3d8d/livekit_agents-1.4.5.tar.gz", hash = "sha256:19fdf45a2c4d02d86b4ad132b73bf3f58eadb75f79819e5015e6fadfb1263852", size = 2416100, upload-time = "2026-03-11T06:45:03.912Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/41/51/723d35f286a33eeb7d39a81dad83ffa9dbce0128ccbbf17436f88ee2f316/livekit_agents-1.4.4-py3-none-any.whl", hash = "sha256:ddfc7b92e3185c8bb68e25590221b4e0f14abc06ca731a11b60804e3432dcc14", size = 2495023, upload-time = "2026-03-03T01:11:34.043Z" },
+    { url = "https://files.pythonhosted.org/packages/71/ad/a7613ddd5cfb29e015913ae44b804505d41c1d02d19ffeaf2f7015d23664/livekit_agents-1.4.5-py3-none-any.whl", hash = "sha256:aff0b61dbd24b1a100cccca8e2a0056f414b861ce71ba8e4338bc5f89e149f7a", size = 2499369, upload-time = "2026-03-11T06:45:01.772Z" },
 ]
 
 [[package]]
@@ -1202,7 +1202,7 @@ wheels = [
 
 [[package]]
 name = "livekit-plugins-google"
-version = "1.4.4"
+version = "1.4.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "google-auth" },
@@ -1211,22 +1211,22 @@ dependencies = [
     { name = "google-genai" },
     { name = "livekit-agents" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/06/ed/94daf499b08ad09ac034465d0486d1b20d88382fa7429383c69efb126c60/livekit_plugins_google-1.4.4.tar.gz", hash = "sha256:74c1d2055bf765ae09e02209082c26d80cb9a6a5233e551f097c956048873c49", size = 38936, upload-time = "2026-03-03T01:12:16.057Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/00/2d/cea11c9f9b56455ffd2304e36adac62c095ce7108e541b8b8d9e9184d1f4/livekit_plugins_google-1.4.5.tar.gz", hash = "sha256:35493811d00c36782e8f7bb9cada6b1b5743a98bf54a3083cf6ada8cecca782e", size = 39323, upload-time = "2026-03-11T06:45:53.535Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/3e/38/4a8b48a49199fa57380f20d9f3e58e09c5318bb0d98e2507bf1881342871/livekit_plugins_google-1.4.4-py3-none-any.whl", hash = "sha256:d2e9626bb5d082a33e9066d793e531b6b0136125c840c1e491d7d83f61afaef0", size = 45500, upload-time = "2026-03-03T01:12:14.32Z" },
+    { url = "https://files.pythonhosted.org/packages/3f/8d/7ab5a23df7c3621f820fbfe1331efbcdcc94a85625617c1f9e75a2ceedb3/livekit_plugins_google-1.4.5-py3-none-any.whl", hash = "sha256:f11836b9208ec2f280dde8d64a89e88ada4c7e7f24cf4d32cdd4034180e33455", size = 45936, upload-time = "2026-03-11T06:45:52.254Z" },
 ]
 
 [[package]]
 name = "livekit-plugins-spatialreal"
-version = "1.4.4"
+version = "1.4.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "avatarkit" },
     { name = "livekit-agents" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/23/23/ab9d125a1a9e638bc55e7d339020eae874c9bc7bd4741db9c9fffa92deae/livekit_plugins_spatialreal-1.4.4.tar.gz", hash = "sha256:e799bd2c54834d0749496f2604c994ca3813898fc0ca14acf7e98effcb11cd26", size = 10804, upload-time = "2026-03-03T17:24:41.835Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d8/c2/dc4ed0df89165e35063431d9f9ff13eae3cf41ffee4e471095e0bd9c54cd/livekit_plugins_spatialreal-1.4.5.tar.gz", hash = "sha256:ec219157fbe2c97780ada85e7281b9ad762a772d2981ccb86f1fa6154188dc1e", size = 11548, upload-time = "2026-03-22T16:21:59.06Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c2/2a/ce24df2c2de72c146de168d02da5d241a8b1eb657f4a31d0a39b63681455/livekit_plugins_spatialreal-1.4.4-py3-none-any.whl", hash = "sha256:3d6d393d31de0cbf5e55c5e887929f5ebe1c89c8d6c10fc21ee1672fc22e1653", size = 10720, upload-time = "2026-03-03T17:24:40.734Z" },
+    { url = "https://files.pythonhosted.org/packages/02/0e/ca09eaaf16e3dcea75f9dbdcabeb46bfef75c93fe23eccd98b4bfd82a463/livekit_plugins_spatialreal-1.4.5-py3-none-any.whl", hash = "sha256:c0ef913c650b86175a11356d2fa7bf928b746402aa84faeb51f2f195a9cf81fa", size = 11365, upload-time = "2026-03-22T16:21:57.657Z" },
 ]
 
 [[package]]
@@ -2236,10 +2236,10 @@ dependencies = [
 requires-dist = [
     { name = "flask", specifier = ">=3.0.0" },
     { name = "flask-cors", specifier = ">=4.0.0" },
-    { name = "livekit-agents", specifier = "==1.4.4" },
+    { name = "livekit-agents", specifier = "==1.4.5" },
     { name = "livekit-api", specifier = ">=1.1.0" },
-    { name = "livekit-plugins-google", specifier = "==1.4.4" },
-    { name = "livekit-plugins-spatialreal", specifier = "==1.4.4" },
+    { name = "livekit-plugins-google", specifier = "==1.4.5" },
+    { name = "livekit-plugins-spatialreal", specifier = "==1.4.5" },
     { name = "python-dotenv", specifier = ">=1.0.0" },
 ]
 
