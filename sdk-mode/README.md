@@ -1,26 +1,49 @@
 # SDK Mode
 
-In SDK mode, the conversation pipeline is handled by the client:
+[![@spatialwalk/avatarkit](https://img.shields.io/npm/v/%40spatialwalk%2Favatarkit?label=%40spatialwalk%2Favatarkit)](https://www.npmjs.com/package/@spatialwalk/avatarkit)
 
-`ASR -> LLM -> TTS -> Avatar`
+In SDK mode the entire conversation pipeline runs on the client:
 
-The backend only issues `session token`.
+`ASR → LLM → TTS → Avatar`
 
-## Directory Layout
+The backend only issues a `session token`.
 
-```text
-clients/
-├── web/              # Main Web SDK mode sample
-├── ios/
-└── android/
+## Architecture
 
-servers/
-├── python/           # Recommended token service
-├── nodejs/
-└── go/
+```mermaid
+flowchart LR
+    A["🖥️ Client"] -->|Audio Data| B["SpatialReal SDK"]
+    B -->|WebSocket| C["☁️ SpatialReal Server"]
+    C -->|Drive Params| B
+    B -->|Render & Play| A
 ```
 
-## Recommended Run Path (Web + Python)
+1. Local VAD detects speech and segments audio
+2. Segment is sent to ASR for transcription
+3. ASR text streams into LLM
+4. LLM deltas are split into sentence chunks
+5. Each chunk triggers TTS immediately
+6. Audio is sent to Avatar in strict chunk index order
+7. Only the last chunk uses `flush=true`
+
+**Key constraints:**
+
+- Strict send order for chunked TTS output
+- Flush only once at the end of one full reply
+- Use SDK `onConversationState` as the speaking state source
+- Gate VAD while avatar is speaking or processing
+- Prefer natural punctuation boundaries for chunking
+
+## Prerequisites
+
+- Node.js 18+
+- pnpm
+- Python 3.10+
+- uv
+- [SpatialReal credentials](https://app.spatialreal.ai/apps)
+- OpenAI API key (for the Web reference client)
+
+## Setup
 
 Start token service:
 
@@ -28,7 +51,6 @@ Start token service:
 cd servers/python
 cp .env.example .env
 uv sync
-uv run app.py
 ```
 
 Start web client:
@@ -37,32 +59,11 @@ Start web client:
 cd clients/web
 cp .env.example .env
 pnpm install
-pnpm dev
 ```
 
-Open: `http://localhost:3001`
+Fill both `.env` files with real values.
 
-## Voice Pipeline Notes
-
-Using `clients/web` as reference:
-
-1. Local VAD starts a segment when speech begins.
-2. Segment ends on silence and is sent to ASR.
-3. ASR text goes into streaming LLM.
-4. LLM deltas are split into sentence chunks.
-5. Each chunk triggers TTS immediately.
-6. Audio is sent to Avatar in strict chunk index order.
-7. Only the last chunk uses `flush=true`.
-
-## Key Implementation Constraints
-
-- Strict send order for chunked TTS output.
-- Flush only once at the end of one full reply.
-- Use SDK `onConversationState` as speaking state source.
-- Gate VAD while avatar is speaking or processing.
-- Prefer natural punctuation boundaries for chunking.
-
-## Environment Variables
+### Environment Variables
 
 Web (`clients/web/.env`):
 
@@ -80,18 +81,46 @@ Web (`clients/web/.env`):
 
 Backend (`servers/*/.env`) must provide SpatialReal credentials for token issuing.
 
-## Android Sample
+## Run
 
-`clients/android` provides a Kotlin + Compose SDK mode sample with the same pipeline behavior.
+```bash
+# Terminal 1 — Token service
+cd servers/python
+uv run app.py
+```
 
-## References
+```bash
+# Terminal 2 — Web client
+cd clients/web
+pnpm dev
+```
 
-- SpatialReal App ID / API Key: https://docs.spatialreal.ai/overview/get-apikeys
-- SpatialReal Avatar ID (test avatars): https://docs.spatialreal.ai/overview/test-avatars
-- Session token issuing guide: https://docs.spatialreal.ai/server/auth.md
+Open `http://localhost:3001`.
+
+## Project Structure
+
+```text
+sdk-mode/
+├── clients/
+│   ├── web/              # Main Web SDK mode sample (React)
+│   ├── ios/
+│   └── android/          # Kotlin + Compose sample
+├── servers/
+│   ├── python/           # Recommended token service
+│   ├── nodejs/           # Placeholder
+│   └── go/               # Placeholder
+└── README.md
+```
 
 ## Production Notes
 
 - Direct model calls from client are for demos only.
 - Production should proxy model calls on backend and store secrets server-side.
 - Add auth, rate limiting, audit logs, and retry strategy.
+
+## References
+
+- [AvatarKit SDK Mode Guide](https://docs.spatialreal.ai/guide/sdk-mode)
+- [Get API Keys](https://docs.spatialreal.ai/overview/get-apikeys)
+- [Test Avatars](https://docs.spatialreal.ai/overview/test-avatars)
+- [Session Token Guide](https://docs.spatialreal.ai/server/auth)
