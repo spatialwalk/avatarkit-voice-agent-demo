@@ -42,7 +42,7 @@ cp .env.example .env
 uv sync
 
 # Frontend
-cd ../../clients/frontend
+cd ../../clients/web
 cp .env.example .env
 pnpm install
 ```
@@ -59,7 +59,7 @@ uv run app.py
 
 ```bash
 # Terminal 2 — Frontend
-cd clients/frontend
+cd clients/web
 pnpm dev
 ```
 
@@ -81,7 +81,7 @@ host-mode/
 └── README.md
 ```
 
-> **Note:** `servers/nodejs`, `servers/go`, and mobile clients are placeholders. Use `servers/python` + `clients/frontend` for a runnable demo.
+> **Note:** `servers/nodejs`, `servers/go`, and mobile clients are placeholders. Use `servers/python` + `clients/web` for a runnable demo.
 
 ## References
 

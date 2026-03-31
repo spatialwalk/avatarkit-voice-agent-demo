@@ -37,7 +37,7 @@ cp .env.example .env
 uv sync
 
 # Frontend
-cd ../../clients/frontend
+cd ../../clients/web
 cp .env.example .env
 pnpm install
 ```
@@ -54,7 +54,7 @@ uv run token_server.py
 
 ```bash
 # Terminal 2 — Frontend
-cd clients/frontend
+cd clients/web
 pnpm dev
 ```
 
