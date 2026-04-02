@@ -4,6 +4,7 @@ Two backend agent demos and two frontend demos that share the same core semantic
 
 - `backend/cascade`: VAD + STT + LLM + TTS pipeline (Silero + Deepgram + OpenAI-compatible + Cartesia)
 - `backend/end-to-end`: realtime speech-to-speech providers (OpenAI, Azure OpenAI, Google, AWS Nova Sonic, Ultravox, xAI)
+- `backend/agents-js`: TypeScript `@livekit/agents` example using `@spatialwalk/livekit-plugins-spatialreal-js`
 - `frontend/vite-react-spa`: Vite React SPA demo
 - `frontend/next`: Next.js demo with the same UX and behavior as the Vite SPA demo
 
@@ -15,6 +16,7 @@ livekit-agents/
 │   ├── vite-react-spa/
 │   └── next/
 └── backend/
+    ├── agents-js/
     ├── cascade/
     └── end-to-end/
 ```
@@ -24,7 +26,7 @@ livekit-agents/
 For local usage, pick exactly:
 
 - **ONE frontend**: `frontend/vite-react-spa` or `frontend/next`
-- **ONE backend**: `backend/cascade` or `backend/end-to-end`
+- **ONE backend**: `backend/agents-js`, `backend/cascade`, or `backend/end-to-end`
 
 Then run only that selected frontend + backend pair.
 
@@ -67,6 +69,16 @@ Get your SpatialReal app/avatar credentials at: https://app.spatialreal.ai/
 ## 2) Pick and set up ONE backend
 
 Choose one backend implementation.
+
+### agents-js backend
+
+```bash
+cd backend/agents-js
+cp .env.example .env
+pnpm i
+```
+
+This backend uses LiveKit Inference by default, so you only need LiveKit + SpatialReal credentials in `.env`.
 
 ### Cascade backend
 
@@ -120,6 +132,20 @@ In another terminal:
 ```bash
 cd backend/<cascade-or-end-to-end>
 uv run agent.py dev
+```
+
+For the TypeScript `agents-js` backend:
+
+```bash
+cd backend/agents-js
+pnpm token-server
+```
+
+In another terminal:
+
+```bash
+cd backend/agents-js
+pnpm dev
 ```
 
 In another terminal, start your selected frontend:
