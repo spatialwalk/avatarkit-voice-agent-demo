@@ -46,7 +46,14 @@ The Next.js demo uses `withAvatarkit` in `frontend/next/next.config.mjs` so WASM
 
 ## Run locally
 
-Start a backend token server first (`backend/cascade` or `backend/end-to-end`):
+Start a backend token server first (`backend/agents-js`, `backend/cascade`, or `backend/end-to-end`):
+
+```bash
+cd ../backend/agents-js
+pnpm token-server
+```
+
+Or, for the Python backends:
 
 ```bash
 cd ../backend/<cascade-or-end-to-end>
