@@ -1,0 +1,11 @@
+[project]
+name = "rtc-livekit-pure-backend"
+version = "0.1.0"
+description = "Pure RTC token backend for LiveKit"
+requires-python = ">=3.10,<3.15"
+dependencies = [
+  "flask>=3.0.0",
+  "flask-cors>=4.0.0",
+  "livekit-api>=1.1.0",
+  "python-dotenv>=1.0.0",
+]

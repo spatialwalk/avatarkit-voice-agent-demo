@@ -1,13 +1,138 @@
 # LiveKit Agents Demos
 
-Two backend agent demos and two frontend demos that share the same core semantics:
+[![@spatialwalk/avatarkit](https://img.shields.io/npm/v/%40spatialwalk%2Favatarkit?label=%40spatialwalk%2Favatarkit)](https://www.npmjs.com/package/@spatialwalk/avatarkit)
+[![@spatialwalk/avatarkit-rtc](https://img.shields.io/npm/v/%40spatialwalk%2Favatarkit-rtc?label=%40spatialwalk%2Favatarkit-rtc)](https://www.npmjs.com/package/@spatialwalk/avatarkit-rtc)
+[![AvatarKit UI](https://img.shields.io/badge/AvatarKit_UI-components-blueviolet)](https://ui.spatialreal.ai/)
+[![livekit-plugins-spatialreal](https://img.shields.io/pypi/v/livekit-plugins-spatialreal?label=livekit-plugins-spatialreal)](https://pypi.org/project/livekit-plugins-spatialreal/)
 
-- `backend/cascade`: VAD + STT + LLM + TTS pipeline (Silero + Deepgram + OpenAI-compatible + Cartesia)
-- `backend/end-to-end`: realtime speech-to-speech providers (OpenAI, Azure OpenAI, Google, AWS Nova Sonic, Ultravox, xAI)
-- `frontend/vite-react-spa`: Vite React SPA demo
-- `frontend/next`: Next.js demo with the same UX and behavior as the Vite SPA demo
+Two backend strategies and two frontend implementations that share the same core UX:
 
-## Project structure
+- `backend/cascade` — VAD + STT + LLM + TTS pipeline (Silero + Deepgram + OpenAI-compatible + Cartesia)
+- `backend/end-to-end` — Realtime speech-to-speech providers (OpenAI, Azure OpenAI, Google, AWS Nova Sonic, Ultravox, xAI)
+- `frontend/vite-react-spa` — Vite React SPA
+- `frontend/next` — Next.js (same UX as the Vite SPA)
+
+## Architecture
+
+```mermaid
+flowchart BT
+    subgraph Agent ["🤖 Agent Pipeline"]
+        P["LiveKit Agents"]
+        PL["SpatialReal Plugin"]
+    end
+
+    Cloud["☁️ SpatialReal"]
+    RTC["📡 LiveKit Room"]
+    Client["🖥️ React / Next.js"]
+
+    P -.-> PL
+    PL --> Cloud
+    Cloud --> RTC
+    RTC --> Client
+```
+
+Pick **one frontend** + **one backend** to form a working pair:
+
+1. Frontend requests a LiveKit token from the backend token server
+2. Backend returns JWT and dispatches a voice agent into the LiveKit room
+3. Agent runs the selected pipeline (cascade or end-to-end) with SpatialReal avatar
+4. Frontend connects to the room and renders the avatar stream
+
+## Prerequisites
+
+- Node.js 18+
+- pnpm
+- Python 3.10+
+- uv
+- [LiveKit Cloud credentials](https://cloud.livekit.io) (or self-hosted)
+- [SpatialReal credentials](https://app.spatialreal.ai/)
+- API keys for your chosen providers (see `.env.example` in each backend)
+
+## Setup
+
+### 1) Pick and set up ONE frontend
+
+**Vite React SPA:**
+
+```bash
+cd frontend/vite-react-spa
+cp .env.example .env
+pnpm i
+```
+
+**Next.js:**
+
+```bash
+cd frontend/next
+cp .env.example .env
+pnpm i
+```
+
+Set avatar env vars in your chosen frontend's `.env`:
+
+```bash
+# Vite
+VITE_SPATIALREAL_APP_ID=your_app_id
+VITE_SPATIALREAL_AVATAR_ID=your_avatar_id
+
+# Next.js
+NEXT_PUBLIC_SPATIALREAL_APP_ID=your_app_id
+NEXT_PUBLIC_SPATIALREAL_AVATAR_ID=your_avatar_id
+```
+
+### 2) Pick and set up ONE backend
+
+**Cascade:**
+
+```bash
+cd backend/cascade
+cp .env.example .env
+uv sync
+uv run agent.py download-files
+```
+
+**End-to-end:**
+
+```bash
+cd backend/end-to-end
+cp .env.example .env
+uv sync
+uv run agent.py download-files
+```
+
+For end-to-end, choose a provider in `.env`:
+
+```bash
+E2E_PROVIDER=openai   # openai | azure-openai | google | aws | ultravox | xai
+```
+
+Then configure credentials for your selected provider (see `backend/end-to-end/.env.example`).
+
+## Run
+
+Run only the frontend/backend pair you selected:
+
+```bash
+# Terminal 1 — Token server
+cd backend/<cascade-or-end-to-end>
+uv run token_server.py
+```
+
+```bash
+# Terminal 2 — Agent worker
+cd backend/<cascade-or-end-to-end>
+uv run agent.py dev
+```
+
+```bash
+# Terminal 3 — Frontend
+cd frontend/<vite-react-spa-or-next>
+pnpm dev
+```
+
+Open `http://localhost:3000`.
+
+## Project Structure
 
 ```text
 livekit-agents/
@@ -19,151 +144,23 @@ livekit-agents/
     └── end-to-end/
 ```
 
-## Choose your pair (required)
-
-For local usage, pick exactly:
-
-- **ONE frontend**: `frontend/vite-react-spa` or `frontend/next`
-- **ONE backend**: `backend/cascade` or `backend/end-to-end`
-
-Then run only that selected frontend + backend pair.
-
-## 1) Pick and set up ONE frontend
-
-Choose one frontend implementation.
-
-### Vite React SPA
-
-```bash
-cd frontend/vite-react-spa
-cp .env.example .env
-pnpm i
-```
-
-Set frontend avatar env vars in `frontend/vite-react-spa/.env`:
-
-```bash
-VITE_SPATIALREAL_APP_ID=your_app_id
-VITE_SPATIALREAL_AVATAR_ID=your_avatar_id
-```
-
-### Next.js
-
-```bash
-cd frontend/next
-cp .env.example .env
-pnpm i
-```
-
-Set frontend avatar env vars in `frontend/next/.env`:
-
-```bash
-NEXT_PUBLIC_SPATIALREAL_APP_ID=your_app_id
-NEXT_PUBLIC_SPATIALREAL_AVATAR_ID=your_avatar_id
-```
-
-Get your SpatialReal app/avatar credentials at: https://app.spatialreal.ai/
-
-## 2) Pick and set up ONE backend
-
-Choose one backend implementation.
-
-### Cascade backend
-
-```bash
-cd backend/cascade
-cp .env.example .env
-uv sync
-uv run agent.py download-files
-```
-
-### End-to-end backend
-
-```bash
-cd backend/end-to-end
-cp .env.example .env
-uv sync
-uv run agent.py download-files
-```
-
-In `backend/end-to-end/.env`, choose a provider:
-
-```bash
-E2E_PROVIDER=openai
-```
-
-Supported provider values:
-
-- `openai`
-- `azure-openai`
-- `google`
-- `aws`
-- `ultravox`
-- `xai`
-
-Then configure credentials for your selected provider in `backend/end-to-end/.env.example`.
-For SpatialReal credentials (API key, app ID, avatar ID), use: https://app.spatialreal.ai/
-
-## 3) Run locally
-
-Run only the frontend/backend pair you selected above.
-
-Start backend processes from your selected backend:
-
-```bash
-cd backend/<cascade-or-end-to-end>
-uv run token_server.py
-```
-
-In another terminal:
-
-```bash
-cd backend/<cascade-or-end-to-end>
-uv run agent.py dev
-```
-
-In another terminal, start your selected frontend:
-
-```bash
-# Vite SPA
-cd frontend/vite-react-spa
-pnpm dev
-
-# or Next.js
-cd frontend/next
-pnpm dev
-```
-
-Open http://localhost:3000 in your browser.
-
 ## Deploy to LiveKit Cloud
 
-Each backend demo includes a production Docker setup compatible with the LiveKit Cloud builds guide:
-
-- `backend/cascade/Dockerfile`
-- `backend/cascade/.dockerignore`
-- `backend/end-to-end/Dockerfile`
-- `backend/end-to-end/.dockerignore`
-
-Deploy steps (run inside the backend folder you want to deploy):
+Each backend includes a production Dockerfile. Deploy from inside your chosen backend folder:
 
 ```bash
 cd backend/<cascade-or-end-to-end>
 
-# 1) Authenticate and select project
+# Authenticate and select project
 lk cloud auth
-# optional: lk project set-default "<your-project>"
 
-# 2) Create deployment (first time)
+# Create deployment (first time)
 lk agent create
 
-# 3) Deploy updates later
+# Deploy updates
 lk agent deploy
-```
 
-Set runtime secrets in LiveKit Cloud (recommended via secrets file):
-
-```bash
+# Set runtime secrets
 lk agent update-secrets --secrets-file .env
 ```
 
@@ -171,18 +168,11 @@ Notes:
 
 - LiveKit Cloud injects `LIVEKIT_URL`, `LIVEKIT_API_KEY`, and `LIVEKIT_API_SECRET` automatically.
 - Keep provider keys and SpatialReal keys in secrets, not in image or source.
-- For `backend/end-to-end`, include `E2E_PROVIDER` in your deployment secrets.
+- For end-to-end, include `E2E_PROVIDER` in your deployment secrets.
 
-Useful commands:
+## References
 
-```bash
-lk agent status
-lk agent logs
-```
-
-## Documentation
-
-- LiveKit Agents: https://docs.livekit.io/agents/
-- LiveKit Cloud builds: https://docs.livekit.io/deploy/agents/builds/
-- LiveKit deployment quickstart: https://docs.livekit.io/deploy/agents/quickstart/
-- SpatialReal RTC mode: https://docs.spatialreal.ai/guide/rtc-mode
+- [AvatarKit RTC Mode Guide](https://docs.spatialreal.ai/guide/rtc-mode)
+- [LiveKit Agents](https://docs.livekit.io/agents/)
+- [LiveKit Cloud Builds](https://docs.livekit.io/deploy/agents/builds/)
+- [LiveKit Deployment Quickstart](https://docs.livekit.io/deploy/agents/quickstart/)

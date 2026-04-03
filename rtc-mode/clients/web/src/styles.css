@@ -1,0 +1,242 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap');
+
+:root {
+  --bg0: #04151f;
+  --bg1: #0e2233;
+  --fg: #edf7ff;
+  --muted: #acc7df;
+  --card: rgba(7, 22, 37, 0.72);
+  --border: rgba(117, 173, 211, 0.28);
+  --primary: #0ea5e9;
+  --ok: #22c55e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  color: var(--fg);
+  background:
+    radial-gradient(circle at 12% 14%, rgba(14, 165, 233, 0.25), transparent 45%),
+    radial-gradient(circle at 86% 8%, rgba(34, 197, 94, 0.16), transparent 32%),
+    linear-gradient(160deg, var(--bg0), var(--bg1));
+}
+
+.pure-shell {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.pure-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.eyebrow {
+  margin: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #7dd8ff;
+}
+
+h1,
+h2 {
+  margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+h1 {
+  font-size: clamp(1.3rem, 2.2vw, 2rem);
+}
+
+h2 {
+  font-size: 1.02rem;
+}
+
+.state {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  background: rgba(2, 10, 16, 0.48);
+}
+
+.state.ok {
+  color: #b7ffcd;
+}
+
+.state.idle {
+  color: #d3e6f4;
+}
+
+.pure-grid {
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr);
+  gap: 16px;
+}
+
+.card {
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 14px;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.controls p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+label {
+  font-size: 0.85rem;
+  color: #d7ebfb;
+}
+
+input {
+  width: 100%;
+  min-height: 44px;
+  border-radius: 10px;
+  border: 1px solid rgba(126, 183, 220, 0.4);
+  background: rgba(4, 18, 30, 0.75);
+  color: #f7fcff;
+  padding: 0 12px;
+}
+
+input:focus,
+button:focus-visible {
+  outline: 2px solid #7dd8ff;
+  outline-offset: 2px;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+button {
+  min-height: 44px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--primary), #2563eb);
+  font-weight: 700;
+  transition: transform 180ms ease, filter 180ms ease;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+button.ghost {
+  border: 1px solid rgba(117, 173, 211, 0.45);
+  background: rgba(2, 10, 16, 0.34);
+}
+
+dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 106px minmax(0, 1fr);
+  gap: 8px;
+  font-size: 0.83rem;
+}
+
+dd,
+dt {
+  margin: 0;
+}
+
+dd {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.stage-wrap {
+  grid-row: 1 / span 2;
+}
+
+.stage {
+  margin-top: 12px;
+  height: 610px;
+  border-radius: 12px;
+  border: 1px solid rgba(111, 170, 210, 0.35);
+  overflow: hidden;
+  position: relative;
+  background: url('./assets/avatar-bg.webp') center / cover no-repeat rgba(3, 15, 24, 0.78);
+}
+
+.logs ul {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 260px;
+  overflow: auto;
+}
+
+.logs li {
+  border-radius: 10px;
+  border: 1px solid rgba(126, 184, 221, 0.25);
+  background: rgba(3, 15, 25, 0.52);
+  padding: 8px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+}
+
+@media (max-width: 1080px) {
+  .pure-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stage-wrap {
+    grid-row: auto;
+  }
+
+  .stage {
+    min-height: 420px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

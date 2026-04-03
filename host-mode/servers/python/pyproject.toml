@@ -1,0 +1,13 @@
+[project]
+name = "host-backend-pipeline"
+version = "0.1.0"
+description = "Host mode backend with ASR/LLM/TTS pipeline"
+requires-python = ">=3.10,<3.15"
+dependencies = [
+  "fastapi>=0.116.1",
+  "uvicorn[standard]>=0.35.0",
+  "httpx>=0.28.1",
+  "python-dotenv>=1.0.0",
+  "pydantic>=2.11.7",
+  "avatarkit @ git+https://github.com/spatialwalk/avatar-sdk-python.git@main",
+]
