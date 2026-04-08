@@ -3,85 +3,104 @@
 [![@spatialwalk/avatarkit](https://img.shields.io/npm/v/%40spatialwalk%2Favatarkit?label=%40spatialwalk%2Favatarkit)](https://www.npmjs.com/package/@spatialwalk/avatarkit)
 [![avatarkit (Python)](https://img.shields.io/badge/avatarkit-python-blue)](https://github.com/spatialwalk/avatar-sdk-python)
 
-Full server-side conversation pipeline where the backend handles the entire flow:
+## When to use Host Mode
 
-`ASR → LLM → TTS + Host Bridge`
+Host Mode is for scenarios where **the backend handles the entire conversation pipeline** — ASR, LLM, TTS, and avatar animation are all processed server-side. Clients are thin: they capture audio input, send it to the backend via WebSocket, and render the avatar with the returned audio + animation data.
 
-The backend relays audio and animation data to clients via the Host Bridge. Supports multi-platform clients (Web, iOS, Android, Flutter).
+**Choose Host Mode when:**
+- You want a turnkey server-side pipeline
+- You want to keep all API keys and AI logic on the server
+- You need to support thin clients (mobile, embedded) that only capture input and render
+- You want centralized control over the conversation flow
+
+**Choose [SDK Mode](../sdk-mode/) when:**
+- You want full client-side control over the conversation pipeline
+- You already have your own ASR/LLM/TTS infrastructure
+- You want to integrate AvatarKit into an existing app
 
 ## Architecture
 
 ```mermaid
 flowchart LR
-    A["🖥️ AvatarKit Server SDK"] -->|Encoded Messages| B["Your App Network Layer"]
-    B -->|yieldAudioData / yieldFramesData| C["AvatarKit Client SDK"]
-    C -->|Decode & Render| D["🖥️ Avatar"]
+    A["Client"] -->|mic audio / text| B["Backend Server"]
+    B -->|ASR → LLM → TTS| C["AI Services"]
+    B -->|Audio + Frames| D["AvatarKit Server SDK"]
+    D -->|Host Bridge| B
+    B -->|WebSocket: audio + frames| A
+    A -->|yieldAudioData / yieldFramesData| E["AvatarKit Client SDK"]
+    E -->|Render| A
 ```
-
-1. Client sends audio to the backend
-2. Backend runs ASR to transcribe speech
-3. Transcription is processed by LLM
-4. LLM response is converted to speech via TTS
-5. Audio + animation data is relayed to the client through the Host Bridge
-6. Client renders the lip-synced avatar
 
 ## Prerequisites
 
-- Node.js 18+
-- pnpm
-- Python 3.10+
-- uv
-- [SpatialReal credentials](https://app.spatialreal.ai/apps)
+- Python 3.10+, [uv](https://docs.astral.sh/uv/)
+- Node.js 18+, pnpm
+- [SpatialReal credentials](https://app.spatialreal.ai/apps) (App ID + API Key)
 
-## Setup
+## Quick Start
 
 ```bash
-# Backend
+# 1. Configure backend
 cd servers/python
 cp .env.example .env
-uv sync
+# Edit .env with your API keys
 
-# Frontend
-cd ../../clients/web
+# 2. Start everything
+cd ../..
+./start.sh
+```
+
+The start script will:
+- Detect your LAN IP
+- Auto-configure Android `local.properties` and iOS `Config.swift` with the backend URL
+- Start the backend and frontend
+
+Then open Android Studio / Xcode and build & run — no manual IP configuration needed.
+
+For mobile-only development (no Web frontend):
+
+```bash
+./start.sh --no-frontend
+```
+
+## Web Clients
+
+Each framework reads `VITE_SPATIALREAL_APP_ID` from `.env` and connects to the backend WebSocket at `ws://localhost:8765/ws/agent`.
+
+```bash
+cd clients/web/react   # or vue/ vanilla/ nextjs-direct/ nextjs-iframe/
 cp .env.example .env
 pnpm install
-```
-
-Fill both `.env` files with real values.
-
-## Run
-
-```bash
-# Terminal 1 — Backend
-cd servers/python
-uv run app.py
-```
-
-```bash
-# Terminal 2 — Frontend
-cd clients/web
 pnpm dev
 ```
 
-Open `http://localhost:3002`.
+## Android / iOS
+
+Android and iOS clients connect to the backend WebSocket. The `start.sh` script auto-configures the backend URL.
+
+- **Android**: Open `clients/android/` in Android Studio and run
+- **iOS**: Run `xcodegen generate` in `clients/ios/`, open in Xcode and run
+- **Flutter**: `cd clients/flutter && flutter pub get && flutter run`
 
 ## Project Structure
 
 ```text
 host-mode/
+├── start.sh              # One-command startup
 ├── clients/
-│   ├── frontend/         # Web client (JS)
-│   ├── ios/              # Placeholder
-│   ├── android/          # Placeholder
-│   └── flutter/          # Placeholder
+│   ├── web/
+│   │   ├── react/
+│   │   ├── vue/
+│   │   ├── vanilla/
+│   │   ├── nextjs-direct/
+│   │   └── nextjs-iframe/
+│   ├── android/          # Kotlin + Compose
+│   ├── ios/              # SwiftUI
+│   └── flutter/          # Flutter (iOS + Android)
 ├── servers/
-│   ├── python/           # Full host pipeline implementation
-│   ├── nodejs/           # Placeholder
-│   └── go/               # Placeholder
+│   └── python/           # WebSocket server + AI pipeline
 └── README.md
 ```
-
-> **Note:** `servers/nodejs`, `servers/go`, and mobile clients are placeholders. Use `servers/python` + `clients/web` for a runnable demo.
 
 ## References
 

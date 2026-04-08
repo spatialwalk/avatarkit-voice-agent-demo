@@ -1,0 +1,4 @@
+# Auto-configured by start.sh — or edit manually.
+# For emulator, use 10.0.2.2 (Android's alias for host loopback).
+# For physical device, use your machine's LAN IP.
+HOST_SERVER_URL=http://10.0.2.2:8765

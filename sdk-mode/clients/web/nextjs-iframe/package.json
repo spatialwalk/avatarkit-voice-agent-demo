@@ -1,0 +1,28 @@
+{
+  "name": "avatarkit-nextjs-iframe-demo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n \"iframe,nextjs\" -c \"cyan,magenta\" \"npm run dev:iframe\" \"npm run dev:nextjs\"",
+    "dev:nextjs": "next dev -p 3001",
+    "dev:iframe": "cd iframe-content && npm run dev",
+    "build": "npm run build:iframe && next build",
+    "build:iframe": "cd iframe-content && npm run build && cd .. && node scripts/copy-iframe.js",
+    "start": "next start -p 3001",
+    "lint": "next lint",
+    "install:all": "npm install && cd iframe-content && npm install",
+    "clean": "rm -rf .next public/iframe iframe-content/dist"
+  },
+  "dependencies": {
+    "next": "^14.0.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "concurrently": "^8.2.2",
+    "typescript": "^5.0.0"
+  }
+}
