@@ -1,10 +1,12 @@
 import SwiftUI
 
 @main
-struct AvatarDemoApp: App {
+struct AvatarDemoApp: SwiftUI.App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationStack {
+                ConfigurationView()
+            }
         }
     }
 }

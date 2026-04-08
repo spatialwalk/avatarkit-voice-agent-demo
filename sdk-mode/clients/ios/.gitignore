@@ -1,7 +1,37 @@
-AvatarKit.xcframework/
-AvatarKit.xcframework.zip
-.avatarkit_checksum
-*.xcodeproj/xcuserdata/
-*.xcodeproj/project.xcworkspace/xcuserdata/
+# Xcode
+build/
 DerivedData/
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
+xcuserdata/
+
+# Generated files
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# CocoaPods
+Pods/
+
+# Swift Package Manager
 .build/
+Package.resolved
+
+# Misc
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+*.hmap
+*.xccheckout
+*.xcscmblueprint
+
+# OS
+.DS_Store
+Thumbs.db
