@@ -2,121 +2,86 @@
 
 [![@spatialwalk/avatarkit](https://img.shields.io/npm/v/%40spatialwalk%2Favatarkit?label=%40spatialwalk%2Favatarkit)](https://www.npmjs.com/package/@spatialwalk/avatarkit)
 
-In SDK mode the entire conversation pipeline runs on the client:
+## When to use SDK Mode
 
-`ASR → LLM → TTS → Avatar`
+SDK Mode is for scenarios where **the client drives the avatar directly** — your app sends audio data to SpatialReal's server, which returns animation parameters for lip-synced avatar rendering. The entire conversation pipeline (ASR, LLM, TTS) is your responsibility to implement wherever you prefer (client-side, your own backend, or a third-party service).
 
-The backend only issues a `session token`.
+**Choose SDK Mode when:**
+- You want full control over the conversation pipeline
+- You already have your own ASR/LLM/TTS infrastructure
+- You want to integrate AvatarKit into an existing app
+
+**Choose [Host Mode](../host-mode/) when:**
+- You want a turnkey server-side pipeline (backend handles ASR → LLM → TTS → Avatar)
+- You want to keep API keys and AI logic on the server
+- You need to support thin clients that only render
 
 ## Architecture
 
 ```mermaid
 flowchart LR
-    A["🖥️ Client"] -->|Audio Data| B["SpatialReal SDK"]
-    B -->|WebSocket| C["☁️ SpatialReal Server"]
-    C -->|Drive Params| B
-    B -->|Render & Play| A
+    A["Client App"] -->|Audio PCM| B["AvatarKit SDK"]
+    B -->|WebSocket| C["SpatialReal Server"]
+    C -->|Animation Params| B
+    B -->|Render| A
 ```
-
-1. Local VAD detects speech and segments audio
-2. Segment is sent to ASR for transcription
-3. ASR text streams into LLM
-4. LLM deltas are split into sentence chunks
-5. Each chunk triggers TTS immediately
-6. Audio is sent to Avatar in strict chunk index order
-7. Only the last chunk uses `flush=true`
-
-**Key constraints:**
-
-- Strict send order for chunked TTS output
-- Flush only once at the end of one full reply
-- Use SDK `onConversationState` as the speaking state source
-- Gate VAD while avatar is speaking or processing
-- Prefer natural punctuation boundaries for chunking
 
 ## Prerequisites
 
-- Node.js 18+
-- pnpm
-- Python 3.10+
-- uv
-- [SpatialReal credentials](https://app.spatialreal.ai/apps)
-- OpenAI API key (for the Web reference client)
+- [SpatialReal credentials](https://app.spatialreal.ai/apps) (App ID + Session Token)
 
-## Setup
+## Quick Start
 
-Start token service:
+### Web (React)
 
 ```bash
-cd servers/python
-cp .env.example .env
-uv sync
-```
-
-Start web client:
-
-```bash
-cd clients/web
-cp .env.example .env
+cd clients/web/react
 pnpm install
-```
-
-Fill both `.env` files with real values.
-
-### Environment Variables
-
-Web (`clients/web/.env`):
-
-- `VITE_SPATIALREAL_APP_ID`
-- `VITE_SPATIALREAL_AVATAR_ID`
-- `VITE_OPENAI_API_KEY`
-- `VITE_OPENAI_MODEL`
-- `VITE_OPENAI_STT_MODEL`
-- `VITE_OPENAI_TTS_MODEL`
-- `VITE_OPENAI_TTS_VOICE`
-- `VITE_VAD_START_THRESHOLD`
-- `VITE_VAD_STOP_THRESHOLD`
-- `VITE_VAD_SILENCE_MS`
-- `VITE_VAD_MIN_SPEECH_MS`
-
-Backend (`servers/*/.env`) must provide SpatialReal credentials for token issuing.
-
-## Run
-
-```bash
-# Terminal 1 — Token service
-cd servers/python
-uv run app.py
-```
-
-```bash
-# Terminal 2 — Web client
-cd clients/web
 pnpm dev
 ```
 
-Open `http://localhost:3001`.
+Open `http://localhost:5173`, enter your App ID and Session Token, select a character, and click an audio file to see the avatar speak.
+
+Other frameworks available: `vue/`, `vanilla/`, `nextjs-direct/`, `nextjs-iframe/`.
+
+### Android
+
+Open `clients/android/` in Android Studio. Enter App ID and Session Token on the config screen, select a character, and tap an audio file.
+
+### iOS
+
+```bash
+cd clients/ios
+xcodegen generate
+```
+
+Open `AvatarDemo.xcodeproj` in Xcode. Enter App ID and Session Token, select a character, and tap an audio file.
 
 ## Project Structure
 
 ```text
 sdk-mode/
 ├── clients/
-│   ├── web/              # Main Web SDK mode sample (React)
-│   ├── ios/
-│   └── android/          # Kotlin + Compose sample
-├── servers/
-│   ├── python/           # Recommended token service
-│   ├── nodejs/           # Placeholder
-│   └── go/               # Placeholder
+│   ├── web/
+│   │   ├── react/
+│   │   ├── vue/
+│   │   ├── vanilla/
+│   │   ├── nextjs-direct/
+│   │   └── nextjs-iframe/
+│   ├── android/          # Kotlin + Compose
+│   └── ios/              # SwiftUI
 └── README.md
 ```
 
-## Production Notes
+## Extending with Real-Time Conversation
 
-- Direct model calls from client are for demos only.
-- Production should proxy model calls on backend and store secrets server-side.
-- Add auth, rate limiting, audit logs, and retry strategy.
+These demos use pre-recorded audio files to drive the avatar. To build a full voice conversation, replace the audio source with your own AI pipeline:
+
+```typescript
+// Instead of loading a PCM file:
+const pcm = await yourTTS.synthesize(text)
+controller.send(pcm.buffer, true)
+```
 
 ## References
 
