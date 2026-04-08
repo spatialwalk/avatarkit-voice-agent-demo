@@ -133,7 +133,7 @@ class AvatarViewModel(application: Application) : AndroidViewModel(application) 
 
     fun interrupt() {
         hostStopMic()
-        hostWebSocket?.send("{\"type\":\"interrupt\"}")
+        hostWebSocket?.send(JSONObject().apply { put("type", "interrupt") }.toString())
         hostTurnMap.clear()
         controller?.interrupt()
     }
@@ -148,7 +148,7 @@ class AvatarViewModel(application: Application) : AndroidViewModel(application) 
             "ready" -> {
                 hostConnected = true
                 hostConnecting = false
-                hostWebSocket?.send("{\"type\":\"set_avatar\",\"avatarId\":\"$currentAvatarId\"}")
+                hostWebSocket?.send(JSONObject().apply { put("type", "set_avatar"); put("avatarId", currentAvatarId) }.toString())
             }
             "avatar_audio" -> {
                 val audioB64 = obj.optString("audio", "")
@@ -280,7 +280,7 @@ class AvatarViewModel(application: Application) : AndroidViewModel(application) 
                     if (read > 0) {
                         val chunk = if (read == chunkSize) buffer else buffer.copyOf(read)
                         val b64 = Base64.encode(chunk)
-                        hostWebSocket?.send("{\"type\":\"mic_audio\",\"audio\":\"$b64\"}")
+                        hostWebSocket?.send(JSONObject().apply { put("type", "mic_audio"); put("audio", b64) }.toString())
                     }
                 }
             } catch (_: CancellationException) {
@@ -299,14 +299,14 @@ class AvatarViewModel(application: Application) : AndroidViewModel(application) 
             audioRecord?.release()
         } catch (_: Exception) {}
         audioRecord = null
-        hostWebSocket?.send("{\"type\":\"mic_end\"}")
+        hostWebSocket?.send(JSONObject().apply { put("type", "mic_end") }.toString())
     }
 
     fun hostSendText(text: String) {
         val trimmed = text.trim()
         if (trimmed.isEmpty()) return
         if (!hostConnected) hostConnect()
-        hostWebSocket?.send("{\"type\":\"text_query\",\"text\":\"${trimmed.replace("\"", "\\\"")}\"}")
+        hostWebSocket?.send(JSONObject().apply { put("type", "text_query"); put("text", trimmed) }.toString())
         hostTextInput = ""
     }
 

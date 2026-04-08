@@ -261,6 +261,11 @@ private fun ConfigRow(
     }
 }
 
+private val httpClient = OkHttpClient.Builder()
+    .connectTimeout(5, TimeUnit.SECONDS)
+    .readTimeout(5, TimeUnit.SECONDS)
+    .build()
+
 private fun checkServer(hostUrl: String): ServerCheckResult {
     val httpBase = hostUrl
         .replace("ws://", "http://")
@@ -268,14 +273,9 @@ private fun checkServer(hostUrl: String): ServerCheckResult {
         .removeSuffix("/ws/agent")
         .trimEnd('/')
 
-    val client = OkHttpClient.Builder()
-        .connectTimeout(5, TimeUnit.SECONDS)
-        .readTimeout(5, TimeUnit.SECONDS)
-        .build()
-
     // 1. Check /healthz for missing env vars
     val healthReq = Request.Builder().url("$httpBase/healthz").build()
-    val healthResp = client.newCall(healthReq).execute()
+    val healthResp = httpClient.newCall(healthReq).execute()
     val healthBody = healthResp.body?.string() ?: throw Exception("Empty response from /healthz")
     val healthJson = JSONObject(healthBody)
     val ok = healthJson.optBoolean("ok", false)
@@ -295,7 +295,7 @@ private fun checkServer(hostUrl: String): ServerCheckResult {
 
     // 2. Fetch /api/config for appId and environment
     val configReq = Request.Builder().url("$httpBase/api/config").build()
-    val configResp = client.newCall(configReq).execute()
+    val configResp = httpClient.newCall(configReq).execute()
     val configBody = configResp.body?.string() ?: throw Exception("Empty response from /api/config")
     val configJson = JSONObject(configBody)
     val appId = configJson.optString("appId", "")

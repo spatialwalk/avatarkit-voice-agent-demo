@@ -49,10 +49,18 @@ import AvatarKit
     func interrupt() {
         hostStopMic()
         if let ws = hostWsTask, ws.state == .running {
-            ws.send(.string("{\"type\":\"interrupt\"}")) { _ in }
+            ws.send(.string(jsonString(["type": "interrupt"]))) { _ in }
         }
         hostTurnMap.removeAll()
         avatarController?.interrupt()
+    }
+
+    // MARK: - JSON Helper
+
+    private func jsonString(_ dict: [String: Any]) -> String {
+        guard let data = try? JSONSerialization.data(withJSONObject: dict),
+              let str = String(data: data, encoding: .utf8) else { return "{}" }
+        return str
     }
 
     // MARK: - Host Mode
@@ -147,7 +155,7 @@ import AvatarKit
             let byteCount = Int(outputBuffer.frameLength) * 2
             let data = Data(bytes: int16Data[0], count: byteCount)
             let b64 = data.base64EncodedString()
-            let msg = "{\"type\":\"mic_audio\",\"audio\":\"\(b64)\"}"
+            let msg = self.jsonString(["type": "mic_audio", "audio": b64])
             ws.send(.string(msg)) { _ in }
         }
 
@@ -169,7 +177,7 @@ import AvatarKit
         hostMicActive = false
 
         if let ws = hostWsTask, ws.state == .running {
-            ws.send(.string("{\"type\":\"mic_end\"}")) { _ in }
+            ws.send(.string(jsonString(["type": "mic_end"]))) { _ in }
         }
     }
 
@@ -182,6 +190,8 @@ import AvatarKit
             hostConnect()
         }
 
+        let payload = jsonString(["type": "text_query", "text": trimmed])
+
         guard let ws = hostWsTask, ws.state == .running else {
             // Queue send after connection
             Task {
@@ -191,16 +201,12 @@ import AvatarKit
                     try? await Task.sleep(nanoseconds: 100_000_000)
                 }
                 guard hostConnected, let ws = self.hostWsTask, ws.state == .running else { return }
-                let escaped = trimmed.replacingOccurrences(of: "\\", with: "\\\\")
-                    .replacingOccurrences(of: "\"", with: "\\\"")
-                ws.send(.string("{\"type\":\"text_query\",\"text\":\"\(escaped)\"}")) { _ in }
+                ws.send(.string(payload)) { _ in }
             }
             return
         }
 
-        let escaped = trimmed.replacingOccurrences(of: "\\", with: "\\\\")
-            .replacingOccurrences(of: "\"", with: "\\\"")
-        ws.send(.string("{\"type\":\"text_query\",\"text\":\"\(escaped)\"}")) { _ in }
+        ws.send(.string(payload)) { _ in }
     }
 
     private func hostReceiveLoop(_ wsTask: URLSessionWebSocketTask) async {
@@ -241,7 +247,7 @@ import AvatarKit
             hostConnected = true
             hostConnecting = false
             let avatarId = avatar?.id ?? ""
-            hostWsTask?.send(.string("{\"type\":\"set_avatar\",\"avatarId\":\"\(avatarId)\"}")) { _ in }
+            hostWsTask?.send(.string(jsonString(["type": "set_avatar", "avatarId": avatarId]))) { _ in }
 
         case "avatar_audio":
             guard let turnId = json["turnId"] as? String else { return }

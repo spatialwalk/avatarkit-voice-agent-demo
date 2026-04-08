@@ -4,6 +4,8 @@ import ai.spatialwalk.avatarkit.AvatarView
 import ai.spatialwalk.avatarkit.hostdemo.data.AvatarCharacter
 import ai.spatialwalk.avatarkit.hostdemo.data.defaultCharacters
 import ai.spatialwalk.avatarkit.hostdemo.viewmodel.AvatarViewModel
+import android.content.Intent
+import android.net.Uri
 import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -45,6 +47,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -56,6 +59,7 @@ fun PlaygroundScreen(
     viewModel: AvatarViewModel,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
     var selectedCharacterId by remember { mutableStateOf("") }
     var customId by remember { mutableStateOf("") }
     var showCustomInput by remember { mutableStateOf(false) }
@@ -225,7 +229,9 @@ fun PlaygroundScreen(
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.clickable {
-                            // Open dashboard link
+                            context.startActivity(
+                                Intent(Intent.ACTION_VIEW, Uri.parse("https://dash.spatialreal.ai"))
+                            )
                         },
                     )
                 }

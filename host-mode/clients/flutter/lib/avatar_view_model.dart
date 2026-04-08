@@ -89,7 +89,9 @@ class AvatarViewModel extends ChangeNotifier {
       _wsChannel = channel;
 
       _wsSubscription = channel.stream.listen(
-        (message) => _handleWsMessage(message as String),
+        (message) {
+          if (message is String) _handleWsMessage(message);
+        },
         onError: (error) {
           errorMessage = error.toString();
           _onWsDisconnected();
