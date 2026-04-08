@@ -9,6 +9,25 @@
 
 ---
 
+<table>
+  <tr>
+    <td rowspan="2" width="66%">
+      <img src="./assets/speak.gif" alt="Speaking" width="100%" />
+      <p align="center"><b>Speaking</b></p>
+    </td>
+    <td width="34%">
+      <img src="./assets/listen.gif" alt="Listening" width="100%" />
+      <p align="center"><b>Listening</b></p>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <img src="./assets/idle.gif" alt="Idle" width="100%" />
+      <p align="center"><b>Idle</b></p>
+    </td>
+  </tr>
+</table>
+
 ## About This Repo
 
 A collection of demo projects showing how to integrate [AvatarKit](https://docs.spatialreal.ai/) into voice agent applications. Covers multiple integration modes (SDK, Host, RTC), frontend frameworks (React, Vue, Next.js), and backend strategies — from minimal quickstarts to production-ready pipelines.
@@ -26,10 +45,10 @@ Sorted from simplest to most advanced:
 |------|------|---------|----------|:----------:|-------------|
 | [spatialreal-speech-to-avatar-quickstart](./spatialreal-speech-to-avatar-quickstart) | SDK | — | Vue | ⭐ | Minimal avatar + audio streaming |
 | [spatialreal-agent-quickstart](./spatialreal-agent-quickstart) | RTC | LiveKit Agents | React (AvatarKit UI) | ⭐ | Fastest RTC voice agent quickstart |
-| [sdk-mode](./sdk-mode) | SDK | Token only | Web (React), iOS, Android | ⭐⭐ | Client-side conversation pipeline |
+| [sdk-mode](./sdk-mode) | SDK | Token only | Web (React, Vue, Vanilla, Next.js), iOS, Android, Flutter | ⭐⭐ | Client-side conversation pipeline |
 | [livekit-agents](./livekit-agents) | RTC | Cascade / End-to-End | React, Next.js | ⭐⭐ | Full-featured voice agent pipeline |
 | [rtc-mode](./rtc-mode) | RTC | Token only | Web (React) | ⭐⭐⭐ | RTC connectivity validation |
-| [host-mode](./host-mode) | Host | Python | Web (JS), iOS, Android, Flutter | ⭐⭐⭐⭐ | Full server-side pipeline with multi-platform clients |
+| [host-mode](./host-mode) | Host | Python | Web (React, Vue, Vanilla, Next.js), iOS, Android, Flutter | ⭐⭐⭐⭐ | Full server-side pipeline with multi-platform clients |
 
 > **New here?** Start with [`spatialreal-agent-quickstart`](./spatialreal-agent-quickstart) — it's the fastest way to get a working voice agent with a lip-synced avatar.
 
