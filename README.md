@@ -14,7 +14,7 @@
   <a href="https://pub.dev/packages/avatar_kit"><img src="https://img.shields.io/pub/v/avatar_kit?label=pub.dev&color=0ea5e9" alt="pub.dev" /></a>
   <br/>
   <a href="#license"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License" /></a>
-  <a href="https://discord.com/invite/dRSUTdPCjm"><img src="https://img.shields.io/discord/1234567890?logo=discord&logoColor=white&label=Discord&color=5865F2" alt="Discord" /></a>
+  <a href="https://discord.gg/dRSUTdPCjm"><img src="https://img.shields.io/badge/Discord-community-5865F2?logo=discord&logoColor=white" alt="Discord" /></a>
   <a href="https://docs.spatialreal.ai/"><img src="https://img.shields.io/badge/docs-spatialreal.ai-blue" alt="Docs" /></a>
 </p>
 
@@ -72,7 +72,7 @@
   <tr>
     <td><b>iOS</b></td>
     <td><code>AvatarKit.xcframework</code></td>
-    <td><a href="https://github.com/spatialwalk/AvatarKit-iOS">GitHub</a> · <a href="https://docs.spatialreal.ai/">docs</a></td>
+    <td><a href="https://github.com/spatialwalk/avatar-kit-ios-release/releases">GitHub Releases</a> · <a href="https://docs.spatialreal.ai/">docs</a></td>
   </tr>
   <tr>
     <td><b>Flutter</b></td>
@@ -173,7 +173,7 @@ You will also need:
 - [Studio](https://app.spatialreal.ai/) — Manage apps, avatars, and API keys
 - [Playground](https://playground.spatialreal.ai/) — Try avatars in the browser
 - [Documentation](https://docs.spatialreal.ai/) — Guides and API reference
-- [Discord](https://discord.com/invite/dRSUTdPCjm) — Community & support
+- [Discord](https://discord.gg/dRSUTdPCjm) — Community & support
 
 ## License
 
