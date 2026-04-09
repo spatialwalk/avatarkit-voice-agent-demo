@@ -52,14 +52,20 @@ async function ensureAgentDispatch(roomName: string): Promise<void> {
     credentials.apiSecret,
   );
 
-  const existingDispatches = await dispatchClient.listDispatch(roomName);
-  const hasMatchingDispatch = existingDispatches.some(
-    (dispatch) => dispatch.agentName === AGENT_NAME,
-  );
+  try {
+    const existingDispatches = await dispatchClient.listDispatch(roomName);
+    const hasMatchingDispatch = existingDispatches.some(
+      (dispatch) => dispatch.agentName === AGENT_NAME,
+    );
 
-  if (!hasMatchingDispatch) {
-    await dispatchClient.createDispatch(roomName, AGENT_NAME);
+    if (hasMatchingDispatch) {
+      return;
+    }
+  } catch {
+    // Room may not exist yet — proceed to create dispatch.
   }
+
+  await dispatchClient.createDispatch(roomName, AGENT_NAME);
 }
 
 export function createApp() {

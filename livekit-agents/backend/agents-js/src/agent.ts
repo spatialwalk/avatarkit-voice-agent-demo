@@ -1,4 +1,5 @@
 import { cli, defineAgent, inference, type JobContext, voice, WorkerOptions } from "@livekit/agents";
+import { fileURLToPath } from "node:url";
 import {
   SpatialRealAvatarSession,
   attachSpatialRealAvatar,
@@ -50,7 +51,7 @@ export default defineAgent({
 if (process.argv[1]) {
   cli.runApp(
     new WorkerOptions({
-      agent: import.meta.url,
+      agent: fileURLToPath(import.meta.url),
       agentName: AGENT_NAME,
     }),
   );

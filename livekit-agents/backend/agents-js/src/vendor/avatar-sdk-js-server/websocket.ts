@@ -43,10 +43,12 @@ export const defaultWebSocketFactory: WebSocketFactory = async (
   url: string,
   headers?: Record<string, string>
 ): Promise<WebSocketLike> => {
-  // Check if we're in an environment with global WebSocket
-  if (typeof globalThis.WebSocket !== "undefined") {
-    // Standard WebSocket doesn't support custom headers in browsers
-    // For environments that support it, we'd need runtime-specific handling
+  const hasHeaders = headers && Object.keys(headers).length > 0;
+
+  // Node.js 21+ exposes globalThis.WebSocket (from undici), but it does NOT
+  // support custom headers.  When headers are required for auth, skip it and
+  // use the 'ws' package which handles headers properly.
+  if (!hasHeaders && typeof globalThis.WebSocket !== "undefined") {
     return new Promise((resolve, reject) => {
       const ws = new globalThis.WebSocket(url);
       ws.binaryType = "arraybuffer";
@@ -56,9 +58,8 @@ export const defaultWebSocketFactory: WebSocketFactory = async (
     });
   }
 
-  // For Node.js, try to use the 'ws' package
+  // For Node.js, use the 'ws' package which supports custom headers
   try {
-    // Dynamic import for Node.js ws package
     const { WebSocket: NodeWebSocket } = await import("ws");
     return new Promise((resolve, reject) => {
       const ws = new NodeWebSocket(url, { headers });
