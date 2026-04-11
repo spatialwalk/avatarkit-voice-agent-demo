@@ -74,7 +74,7 @@ pnpm install
 pnpm dev
 ```
 
-## Android / iOS
+## Android / iOS / Flutter
 
 Android and iOS clients connect to the backend WebSocket. The `start.sh` script auto-configures the backend URL.
 
