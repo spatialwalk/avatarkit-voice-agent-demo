@@ -11,6 +11,7 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/@spatialwalk/avatarkit"><img src="https://img.shields.io/npm/v/%40spatialwalk%2Favatarkit?label=%40spatialwalk%2Favatarkit&color=0ea5e9" alt="npm" /></a>
   <a href="https://central.sonatype.com/artifact/ai.spatialwalk/avatarkit"><img src="https://img.shields.io/maven-central/v/ai.spatialwalk/avatarkit?label=Maven%20Central&color=0ea5e9" alt="Maven Central" /></a>
+  <a href="https://github.com/spatialwalk/avatar-kit-ios-release/releases"><img src="https://img.shields.io/github/v/release/spatialwalk/avatar-kit-ios-release?label=iOS&color=0ea5e9" alt="iOS" /></a>
   <a href="https://pub.dev/packages/avatar_kit"><img src="https://img.shields.io/pub/v/avatar_kit?label=pub.dev&color=0ea5e9" alt="pub.dev" /></a>
   <br/>
   <a href="#license"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License" /></a>
