@@ -5,6 +5,7 @@ export interface SpatialRealAvatarOptions {
   apiKey?: string;
   appId?: string;
   avatarId?: string;
+  useQueryAuth?: boolean;
   consoleEndpointUrl?: string;
   ingressEndpointUrl?: string;
   avatarParticipantIdentity?: string;
@@ -26,6 +27,7 @@ export interface ResolvedSpatialRealAvatarConfig {
   apiKey: string;
   appId: string;
   avatarId: string;
+  useQueryAuth: boolean;
   consoleEndpointUrl: string;
   ingressEndpointUrl: string;
   avatarParticipantIdentity: string;
@@ -51,6 +53,24 @@ function getRequired(key: string, value: string | undefined): string {
   return value;
 }
 
+function getBoolean(value: string | undefined): boolean | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+
+  const normalized = value.trim().toLowerCase();
+  if (["1", "true", "yes", "on"].includes(normalized)) {
+    return true;
+  }
+  if (["0", "false", "no", "off"].includes(normalized)) {
+    return false;
+  }
+
+  throw new SpatialRealError(
+    "SPATIALREAL_USE_QUERY_AUTH must be a boolean-like value: true/false, 1/0, yes/no, on/off",
+  );
+}
+
 export function resolveAvatarConfig(options: SpatialRealAvatarOptions): ResolvedSpatialRealAvatarConfig {
   const idleTimeoutSeconds = options.idleTimeoutSeconds ?? 0;
   if (idleTimeoutSeconds < 0) {
@@ -71,6 +91,10 @@ export function resolveAvatarConfig(options: SpatialRealAvatarOptions): Resolved
     apiKey: getRequired("SPATIALREAL_API_KEY", options.apiKey ?? process.env.SPATIALREAL_API_KEY),
     appId: getRequired("SPATIALREAL_APP_ID", options.appId ?? process.env.SPATIALREAL_APP_ID),
     avatarId: getRequired("SPATIALREAL_AVATAR_ID", options.avatarId ?? process.env.SPATIALREAL_AVATAR_ID),
+    useQueryAuth:
+      options.useQueryAuth ??
+      getBoolean(process.env.SPATIALREAL_USE_QUERY_AUTH) ??
+      true,
     consoleEndpointUrl: options.consoleEndpointUrl ?? process.env.SPATIALREAL_CONSOLE_ENDPOINT ?? DEFAULT_CONSOLE_ENDPOINT,
     ingressEndpointUrl: options.ingressEndpointUrl ?? process.env.SPATIALREAL_INGRESS_ENDPOINT ?? DEFAULT_INGRESS_ENDPOINT,
     avatarParticipantIdentity: options.avatarParticipantIdentity ?? DEFAULT_AVATAR_PARTICIPANT_IDENTITY,

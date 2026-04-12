@@ -16,10 +16,15 @@ export type AgentRuntimeConfig = LiveKitCredentials & {
   instructions: string;
   initialGreeting: string;
   llmModel: string;
+  llmApiKey?: string;
+  llmBaseUrl?: string;
   sttModel: string;
   sttLanguage: string;
+  sttApiKey?: string;
   ttsModel: string;
+  ttsLanguage: string;
   ttsVoice: string;
+  ttsApiKey?: string;
 };
 
 function readOptionalEnv(name: string): string | undefined {
@@ -72,12 +77,19 @@ export function getAgentRuntimeConfig(): AgentRuntimeConfig {
     initialGreeting:
       readOptionalEnv("INITIAL_GREETING") ??
       "Hi there! I am your SpatialReal voice assistant. How can I help?",
-    llmModel: readOptionalEnv("LLM_MODEL") ?? "openai/gpt-4.1-mini",
-    sttModel: readOptionalEnv("STT_MODEL") ?? "deepgram/nova-3",
-    sttLanguage: readOptionalEnv("STT_LANGUAGE") ?? "en",
-    ttsModel: readOptionalEnv("TTS_MODEL") ?? "cartesia/sonic-3",
+    llmModel: readOptionalEnv("LLM_MODEL") ?? "gpt-4o-mini",
+    llmApiKey:
+      readOptionalEnv("LLM_API_KEY") ?? readOptionalEnv("OPENAI_API_KEY"),
+    llmBaseUrl: readOptionalEnv("LLM_BASE_URL"),
+    sttModel: readOptionalEnv("DEEPGRAM_MODEL") ?? "nova-3",
+    sttLanguage: readOptionalEnv("DEEPGRAM_LANGUAGE") ?? "en-US",
+    sttApiKey: readOptionalEnv("DEEPGRAM_API_KEY"),
+    ttsModel: readOptionalEnv("CARTESIA_MODEL") ?? "sonic-2",
+    ttsLanguage: readOptionalEnv("CARTESIA_LANGUAGE") ?? "en",
     ttsVoice:
-      readOptionalEnv("TTS_VOICE") ?? "9626c31c-bec5-4cca-baa8-f8ba9e84c8bc",
+      readOptionalEnv("CARTESIA_VOICE") ??
+      "f786b574-daa5-4673-aa0c-cbe3e8534c02",
+    ttsApiKey: readOptionalEnv("CARTESIA_API_KEY"),
   };
 }
 

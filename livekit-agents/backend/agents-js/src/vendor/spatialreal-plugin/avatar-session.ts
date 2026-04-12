@@ -42,6 +42,7 @@ export class SpatialRealAvatarSession {
       apiKey: this.config.apiKey,
       appId: this.config.appId,
       avatarId: this.config.avatarId,
+      useQueryAuth: this.config.useQueryAuth,
       consoleEndpointUrl: this.config.consoleEndpointUrl,
       ingressEndpointUrl: this.config.ingressEndpointUrl,
       expireAt: new Date(Date.now() + this.config.sessionTtlMs),

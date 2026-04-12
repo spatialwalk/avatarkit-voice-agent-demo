@@ -13,7 +13,13 @@ cp .env.example .env
 pnpm install
 ```
 
-This example uses LiveKit Inference models by default, so it only requires LiveKit and SpatialReal credentials.
+This example uses provider plugins directly instead of LiveKit Inference:
+
+- Deepgram for STT
+- an OpenAI-compatible LLM endpoint
+- Cartesia for TTS
+
+Configure those provider credentials in `.env` alongside the LiveKit and SpatialReal credentials.
 
 The upstream SpatialReal GitHub packages currently do not ship build artifacts when installed as Git dependencies, so this example vendors the minimum runtime source needed for a fresh `pnpm install` to work reliably.
 

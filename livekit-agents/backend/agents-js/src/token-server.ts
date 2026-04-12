@@ -1,7 +1,11 @@
 import cors from "cors";
 import express from "express";
 import { randomUUID } from "node:crypto";
-import { AccessToken, AgentDispatchClient } from "livekit-server-sdk";
+import {
+  AccessToken,
+  AgentDispatchClient,
+  RoomServiceClient,
+} from "livekit-server-sdk";
 
 import {
   AGENT_NAME,
@@ -46,11 +50,21 @@ async function createParticipantToken(
 
 async function ensureAgentDispatch(roomName: string): Promise<void> {
   const credentials = getLiveKitCredentials();
+  const roomClient = new RoomServiceClient(
+    credentials.serverUrl,
+    credentials.apiKey,
+    credentials.apiSecret,
+  );
   const dispatchClient = new AgentDispatchClient(
     credentials.serverUrl,
     credentials.apiKey,
     credentials.apiSecret,
   );
+
+  const existingRooms = await roomClient.listRooms([roomName]);
+  if (existingRooms.length === 0) {
+    await roomClient.createRoom({ name: roomName });
+  }
 
   const existingDispatches = await dispatchClient.listDispatch(roomName);
   const hasMatchingDispatch = existingDispatches.some(

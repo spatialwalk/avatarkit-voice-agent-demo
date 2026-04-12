@@ -7,6 +7,7 @@ import { SpatialRealAvatarSession } from "./avatar-session.js";
 
 export interface AttachSpatialRealAvatarOptions extends SpatialRealAvatarStartOptions {
   autoClose?: boolean;
+  debugLogPrefix?: string;
 }
 
 type AgentLike = {
@@ -70,11 +71,25 @@ export function attachSpatialRealAvatar<T extends voice.Agent>(
 function mirrorAudioFrameStream(
   stream: ReadableStream<AudioFrame>,
   avatar: SpatialRealAvatarSession,
-  options: SpatialRealAvatarStartOptions,
+  options: AttachSpatialRealAvatarOptions,
 ): ReadableStream<AudioFrame> {
   const reader = stream.getReader();
   let finalized = false;
   let sawFrame = false;
+  let frameCount = 0;
+
+  const log = (message: string, details?: unknown): void => {
+    if (!options.debugLogPrefix) {
+      return;
+    }
+
+    if (details === undefined) {
+      console.log(`${options.debugLogPrefix} ${message}`);
+      return;
+    }
+
+    console.log(`${options.debugLogPrefix} ${message}`, details);
+  };
 
   const finalize = async (interrupted: boolean): Promise<void> => {
     if (finalized) {
@@ -84,11 +99,13 @@ function mirrorAudioFrameStream(
     finalized = true;
 
     if (interrupted) {
+      log("avatar audio stream interrupted", { frameCount });
       await avatar.interrupt();
       return;
     }
 
     if (sawFrame) {
+      log("avatar audio stream completed", { frameCount });
       await avatar.endSegment();
     }
   };
@@ -104,14 +121,24 @@ function mirrorAudioFrameStream(
         }
 
         sawFrame = true;
+        frameCount += 1;
+        if (frameCount === 1) {
+          log("avatar audio stream started", {
+            sampleRate: value.sampleRate,
+            channels: value.channels,
+            samplesPerChannel: value.samplesPerChannel,
+          });
+        }
         await avatar.sendFrame(value, options);
         controller.enqueue(value);
       } catch (error) {
+        log("avatar audio stream failed", error);
         await finalize(true);
         controller.error(error);
       }
     },
     async cancel(reason) {
+      log("avatar audio stream canceled", reason);
       await finalize(true);
       await reader.cancel(reason);
     },
