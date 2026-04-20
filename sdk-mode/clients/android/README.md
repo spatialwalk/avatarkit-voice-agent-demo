@@ -67,6 +67,29 @@ Install with Android Studio or adb.
 3. Tap `Start Conversation`.
 4. Speak and pause to trigger one full round.
 
+## Dependency Rules
+
+**All third-party libraries used in demo source code must be explicitly declared in `build.gradle.kts`.**
+
+Do NOT rely on transitive dependencies from the AvatarKit SDK (or any other library). The SDK's internal dependencies (e.g. OkHttp, Ktor) may change between versions, and transitive dependencies are not guaranteed to be exposed to consumers.
+
+Example: if demo code imports `okhttp3.*`, then `implementation(libs.okhttp)` must appear in `app/build.gradle.kts` — even if it "works" locally through SDK transitive deps.
+
+### Verification before publishing
+
+Run a clean build to catch missing dependencies:
+
+```bash
+# Clear local caches that might hide missing deps
+rm -rf ~/.gradle/caches/modules-2/files-2.1/ai.spatialwalk
+rm -rf app/build
+
+# Build from scratch
+./gradlew :app:assembleDebug --refresh-dependencies
+```
+
+If this fails with "Unresolved reference", the demo is missing an explicit dependency declaration.
+
 ## Notes
 
 - This sample calls OpenAI directly from client for demo use.
