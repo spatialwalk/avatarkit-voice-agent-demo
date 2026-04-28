@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@spatialwalk/avatarkit": "1.0.0-beta.91",
+    "@spatialwalk/avatarkit": "1.0.0-beta.104",
     "react": "^18.3.0",
     "react-dom": "^18.3.0"
   },

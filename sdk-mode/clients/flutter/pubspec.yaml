@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  avatar_kit: ^1.0.0-beta.34
+  avatar_kit: ^1.0.0-beta.38
   shared_preferences: ^2.3.0
 
 dev_dependencies:
