@@ -13,10 +13,10 @@ packages:
     dependency: "direct main"
     description:
       name: avatar_kit
-      sha256: "843e5d6b5191a42928b7a6c93648df06efa5d8e94fa1fba256451ab8733000d8"
+      sha256: "96c1ccb2743d5ac008a5dd6eee180088939a93015e1aa353f271b1ff9321f320"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0-beta.34"
+    version: "1.0.0-beta.39"
   boolean_selector:
     dependency: transitive
     description:

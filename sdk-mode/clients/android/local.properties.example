@@ -1,33 +1,26 @@
-# Get SpatialReal App ID / API Key:
+# Copy this file to local.properties and fill in your credentials.
 # https://docs.spatialreal.ai/overview/get-apikeys
-SPATIALREAL_APP_ID=your_spatialreal_app_id
-
-# Get SpatialReal Avatar ID (test avatar):
 # https://docs.spatialreal.ai/overview/test-avatars
-SPATIALREAL_AVATAR_ID=93dd60f8-d9e2-47cf-973e-d75e10cfc951
 
-# SpatialReal region: intl / cn / test
-# Region guide: https://docs.spatialreal.ai/overview/regions
+SPATIALREAL_APP_ID=your_spatialreal_app_id
+SPATIALREAL_AVATAR_ID=your_spatialreal_avatar_id
 SPATIALREAL_ENVIRONMENT=intl
 
-# Get OpenAI API Key:
-# https://platform.openai.com/api-keys
+# OpenAI (direct calls, demo only)
 OPENAI_API_KEY=sk-your_openai_api_key
 OPENAI_BASE_URL=https://api.openai.com
 OPENAI_USE_PROXY=false
-OPENAI_PROXY_BASE_URL=http://10.0.2.2:8090
+OPENAI_PROXY_BASE_URL=
 OPENAI_MODEL=gpt-4o-mini
 OPENAI_STT_MODEL=gpt-4o-mini-transcribe
 OPENAI_STT_LANGUAGE=en
 OPENAI_TTS_MODEL=gpt-4o-mini-tts
 OPENAI_TTS_VOICE=alloy
 
-# Local VAD parameters
-VAD_START_THRESHOLD=0.03
-VAD_STOP_THRESHOLD=0.02
+# VAD parameters (tune by noise level)
+MIC_SAMPLE_RATE=16000
+VAD_START_THRESHOLD=0.02
+VAD_STOP_THRESHOLD=0.014
 VAD_SILENCE_MS=700
 VAD_MIN_SPEECH_MS=280
-VAD_MAX_SPEECH_MS=8000
-
-# Microphone sample rate for ASR (recommended: 16000)
-MIC_SAMPLE_RATE=16000
+VAD_MAX_SPEECH_MS=30000

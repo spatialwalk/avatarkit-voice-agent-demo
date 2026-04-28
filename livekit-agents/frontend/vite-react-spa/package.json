@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@livekit/components-react": "^2.0.0",
-    "@spatialwalk/avatarkit": "1.0.0-beta.75",
-    "@spatialwalk/avatarkit-rtc": "1.0.0-beta.7",
+    "@spatialwalk/avatarkit": "1.0.0-beta.104",
+    "@spatialwalk/avatarkit-rtc": "1.0.0-beta.10",
     "@streamdown/cjk": "^1.0.2",
     "@streamdown/code": "^1.1.0",
     "@streamdown/math": "^1.0.2",

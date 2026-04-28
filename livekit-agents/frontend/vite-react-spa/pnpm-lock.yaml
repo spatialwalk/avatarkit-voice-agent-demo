@@ -12,11 +12,11 @@ importers:
         specifier: ^2.0.0
         version: 2.9.19(livekit-client@2.16.1(@types/dom-mediacapture-record@1.0.22))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tslib@2.8.1)
       '@spatialwalk/avatarkit':
-        specifier: 1.0.0-beta.75
-        version: 1.0.0-beta.75(@webgpu/types@0.1.69)(rolldown-vite@7.2.5(@types/node@24.10.10)(jiti@2.6.1))
+        specifier: 1.0.0-beta.104
+        version: 1.0.0-beta.104(@webgpu/types@0.1.69)(rolldown-vite@7.2.5(@types/node@24.10.10)(jiti@2.6.1))
       '@spatialwalk/avatarkit-rtc':
-        specifier: 1.0.0-beta.7
-        version: 1.0.0-beta.7(@spatialwalk/avatarkit@1.0.0-beta.75(@webgpu/types@0.1.69)(rolldown-vite@7.2.5(@types/node@24.10.10)(jiti@2.6.1)))(livekit-client@2.16.1(@types/dom-mediacapture-record@1.0.22))
+        specifier: 1.0.0-beta.10
+        version: 1.0.0-beta.10(@spatialwalk/avatarkit@1.0.0-beta.104(@webgpu/types@0.1.69)(rolldown-vite@7.2.5(@types/node@24.10.10)(jiti@2.6.1)))(livekit-client@2.16.1(@types/dom-mediacapture-record@1.0.22))
       '@streamdown/cjk':
         specifier: ^1.0.2
         version: 1.0.2(@types/mdast@4.0.4)(micromark-util-types@2.0.2)(micromark@4.0.2)(react@19.2.4)(unified@11.0.5)
@@ -1224,28 +1224,24 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [arm64]
     os: [linux]
-    libc: [glibc]
 
   '@rolldown/binding-linux-arm64-musl@1.0.0-beta.50':
     resolution: {integrity: sha512-L0zRdH2oDPkmB+wvuTl+dJbXCsx62SkqcEqdM+79LOcB+PxbAxxjzHU14BuZIQdXcAVDzfpMfaHWzZuwhhBTcw==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [arm64]
     os: [linux]
-    libc: [musl]
 
   '@rolldown/binding-linux-x64-gnu@1.0.0-beta.50':
     resolution: {integrity: sha512-gyoI8o/TGpQd3OzkJnh1M2kxy1Bisg8qJ5Gci0sXm9yLFzEXIFdtc4EAzepxGvrT2ri99ar5rdsmNG0zP0SbIg==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [x64]
     os: [linux]
-    libc: [glibc]
 
   '@rolldown/binding-linux-x64-musl@1.0.0-beta.50':
     resolution: {integrity: sha512-zti8A7M+xFDpKlghpcCAzyOi+e5nfUl3QhU023ce5NCgUxRG5zGP2GR9LTydQ1rnIPwZUVBWd4o7NjZDaQxaXA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [x64]
     os: [linux]
-    libc: [musl]
 
   '@rolldown/binding-openharmony-arm64@1.0.0-beta.50':
     resolution: {integrity: sha512-eZUssog7qljrrRU9Mi0eqYEPm3Ch0UwB+qlWPMKSUXHNqhm3TvDZarJQdTevGEfu3EHAXJvBIe0YFYr0TPVaMA==}
@@ -1303,10 +1299,10 @@ packages:
   '@shikijs/vscode-textmate@10.0.2':
     resolution: {integrity: sha512-83yeghZ2xxin3Nj8z1NMd/NCuca+gsYXswywDy5bHvwlWL8tpTQmzGeUuHd9FC3E/SBEMvzJRwWEOz5gGes9Qg==}
 
-  '@spatialwalk/avatarkit-rtc@1.0.0-beta.7':
-    resolution: {integrity: sha512-BbT5l3CT2a2tyu06MQEJ1fKkWFoH1fUMVU2petfFyt/x9nSc8CS4fOnJaojQ1cPwDOnA1pkSiLHhEWBM2HmFSA==}
+  '@spatialwalk/avatarkit-rtc@1.0.0-beta.10':
+    resolution: {integrity: sha512-SccI+B7iizOu/QEh3D5lQIOoCFWOtaI3vEDNew/htqBMMvdOl63Q1BbHdktQ5gINF9yB0RYxDnYj6rsXRUn8hg==}
     peerDependencies:
-      '@spatialwalk/avatarkit': ^1.0.0-beta.74
+      '@spatialwalk/avatarkit': ^1.0.0-beta.103
       agora-rtc-sdk-ng: ^4.x
       livekit-client: 2.16.1
     peerDependenciesMeta:
@@ -1315,11 +1311,17 @@ packages:
       livekit-client:
         optional: true
 
-  '@spatialwalk/avatarkit@1.0.0-beta.75':
-    resolution: {integrity: sha512-IRl54zEHUFPhNqL/C4AC+uzTukF28S2f0379OqZc8iy17+TILnPClME/UNp4NMLjJiLtxpWcdZ3VpLTselV02Q==}
+  '@spatialwalk/avatarkit@1.0.0-beta.104':
+    resolution: {integrity: sha512-x1m8PbSyZ0PhB6Av2LvN1HmpY50s9BK0OEtioCvuyIlVmRybnq2gUB8lbt0j5k0MZ1jtLOEbHTJUAu2RR/qQlg==}
     peerDependencies:
       '@webgpu/types': '*'
+      next: '>=13.0.0'
       vite: ^5.0.0
+    peerDependenciesMeta:
+      next:
+        optional: true
+      vite:
+        optional: true
 
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
@@ -1382,28 +1384,24 @@ packages:
     engines: {node: '>= 20'}
     cpu: [arm64]
     os: [linux]
-    libc: [glibc]
 
   '@tailwindcss/oxide-linux-arm64-musl@4.2.1':
     resolution: {integrity: sha512-WZA0CHRL/SP1TRbA5mp9htsppSEkWuQ4KsSUumYQnyl8ZdT39ntwqmz4IUHGN6p4XdSlYfJwM4rRzZLShHsGAQ==}
     engines: {node: '>= 20'}
     cpu: [arm64]
     os: [linux]
-    libc: [musl]
 
   '@tailwindcss/oxide-linux-x64-gnu@4.2.1':
     resolution: {integrity: sha512-qMFzxI2YlBOLW5PhblzuSWlWfwLHaneBE0xHzLrBgNtqN6mWfs+qYbhryGSXQjFYB1Dzf5w+LN5qbUTPhW7Y5g==}
     engines: {node: '>= 20'}
     cpu: [x64]
     os: [linux]
-    libc: [glibc]
 
   '@tailwindcss/oxide-linux-x64-musl@4.2.1':
     resolution: {integrity: sha512-5r1X2FKnCMUPlXTWRYpHdPYUY6a1Ar/t7P24OuiEdEOmms5lyqjDRvVY1yy9Rmioh+AunQ0rWiOTPE8F9A3v5g==}
     engines: {node: '>= 20'}
     cpu: [x64]
     os: [linux]
-    libc: [musl]
 
   '@tailwindcss/oxide-wasm32-wasi@4.2.1':
     resolution: {integrity: sha512-MGFB5cVPvshR85MTJkEvqDUnuNoysrsRxd6vnk1Lf2tbiqNlXpHYZqkqOQalydienEWOHHFyyuTSYRsLfxFJ2Q==}
@@ -2399,28 +2397,24 @@ packages:
     engines: {node: '>= 12.0.0'}
     cpu: [arm64]
     os: [linux]
-    libc: [glibc]
 
   lightningcss-linux-arm64-musl@1.31.1:
     resolution: {integrity: sha512-mVZ7Pg2zIbe3XlNbZJdjs86YViQFoJSpc41CbVmKBPiGmC4YrfeOyz65ms2qpAobVd7WQsbW4PdsSJEMymyIMg==}
     engines: {node: '>= 12.0.0'}
     cpu: [arm64]
     os: [linux]
-    libc: [musl]
 
   lightningcss-linux-x64-gnu@1.31.1:
     resolution: {integrity: sha512-xGlFWRMl+0KvUhgySdIaReQdB4FNudfUTARn7q0hh/V67PVGCs3ADFjw+6++kG1RNd0zdGRlEKa+T13/tQjPMA==}
     engines: {node: '>= 12.0.0'}
     cpu: [x64]
     os: [linux]
-    libc: [glibc]
 
   lightningcss-linux-x64-musl@1.31.1:
     resolution: {integrity: sha512-eowF8PrKHw9LpoZii5tdZwnBcYDxRw2rRCyvAXLi34iyeYfqCQNA9rmUM0ce62NlPhCvof1+9ivRaTY6pSKDaA==}
     engines: {node: '>= 12.0.0'}
     cpu: [x64]
     os: [linux]
-    libc: [musl]
 
   lightningcss-win32-arm64-msvc@1.31.1:
     resolution: {integrity: sha512-aJReEbSEQzx1uBlQizAOBSjcmr9dCdL3XuC/6HLXAxmtErsj2ICo5yYggg1qOODQMtnjNQv2UHb9NpOuFtYe4w==}
@@ -4516,20 +4510,21 @@ snapshots:
 
   '@shikijs/vscode-textmate@10.0.2': {}
 
-  '@spatialwalk/avatarkit-rtc@1.0.0-beta.7(@spatialwalk/avatarkit@1.0.0-beta.75(@webgpu/types@0.1.69)(rolldown-vite@7.2.5(@types/node@24.10.10)(jiti@2.6.1)))(livekit-client@2.16.1(@types/dom-mediacapture-record@1.0.22))':
+  '@spatialwalk/avatarkit-rtc@1.0.0-beta.10(@spatialwalk/avatarkit@1.0.0-beta.104(@webgpu/types@0.1.69)(rolldown-vite@7.2.5(@types/node@24.10.10)(jiti@2.6.1)))(livekit-client@2.16.1(@types/dom-mediacapture-record@1.0.22))':
     dependencies:
       '@bufbuild/protobuf': 2.11.0
-      '@spatialwalk/avatarkit': 1.0.0-beta.75(@webgpu/types@0.1.69)(rolldown-vite@7.2.5(@types/node@24.10.10)(jiti@2.6.1))
+      '@spatialwalk/avatarkit': 1.0.0-beta.104(@webgpu/types@0.1.69)(rolldown-vite@7.2.5(@types/node@24.10.10)(jiti@2.6.1))
     optionalDependencies:
       livekit-client: 2.16.1(@types/dom-mediacapture-record@1.0.22)
 
-  '@spatialwalk/avatarkit@1.0.0-beta.75(@webgpu/types@0.1.69)(rolldown-vite@7.2.5(@types/node@24.10.10)(jiti@2.6.1))':
+  '@spatialwalk/avatarkit@1.0.0-beta.104(@webgpu/types@0.1.69)(rolldown-vite@7.2.5(@types/node@24.10.10)(jiti@2.6.1))':
     dependencies:
       '@bufbuild/protobuf': 2.11.0
       '@guiiai/logg': 1.2.11
       '@webgpu/types': 0.1.69
       nanoid: 5.1.6
       posthog-js: 1.352.0
+    optionalDependencies:
       vite: rolldown-vite@7.2.5(@types/node@24.10.10)(jiti@2.6.1)
 
   '@standard-schema/spec@1.1.0': {}

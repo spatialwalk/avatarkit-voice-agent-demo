@@ -1,5 +1,7 @@
 package ai.spatialwalk.sdkmodeexample
 
+import ai.spatialwalk.avatarkitdemo.BuildConfig
+import ai.spatialwalk.avatarkitdemo.R
 import ai.spatialwalk.avatarkit.AudioFormat
 import ai.spatialwalk.avatarkit.AvatarController
 import ai.spatialwalk.avatarkit.AvatarSDK
@@ -212,7 +214,7 @@ class MainActivity : ComponentActivity() {
                     environment = parseEnvironment(BuildConfig.SPATIALREAL_ENVIRONMENT),
                     audioFormat = AudioFormat(24000),
                     drivingServiceMode = DrivingServiceMode.SDK,
-                    logLevel = LogLevel.INFO,
+                    logLevel = LogLevel.ALL,
                 ),
             )
             AvatarManager.initialize(applicationContext)
@@ -266,7 +268,7 @@ class MainActivity : ComponentActivity() {
             safeCloseController()
 
             try {
-                if (!AvatarSDK.supportsCurrentDevice()) {
+                if (!AvatarSDK.isDeviceSupported()) {
                     error("Current device does not meet AvatarKit requirements (API24+, Vulkan)")
                 }
 
@@ -319,7 +321,6 @@ class MainActivity : ComponentActivity() {
     private fun parseEnvironment(raw: String): Environment {
         return when (raw.lowercase(Locale.US)) {
             "cn" -> Environment.cn
-            "test" -> Environment.test
             else -> Environment.intl
         }
     }
@@ -400,10 +401,6 @@ class MainActivity : ComponentActivity() {
                     if (avatarSpeaking.getAndSet(false)) {
                         pushLog("Avatar finished speaking")
                     }
-                }
-
-                ConversationState.Active -> {
-                    pushLog("Conversation active, waiting for playable content")
                 }
 
                 ConversationState.Paused -> {
@@ -707,6 +704,7 @@ class MainActivity : ComponentActivity() {
         runCatching { controller?.onError = null }
         runCatching { controller?.close() }
         runCatching { controller?.cleanup() }
+        runCatching { view.dispose() }
 
         avatarView = null
     }

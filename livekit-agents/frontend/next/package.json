@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@spatialwalk/avatarkit": "1.0.0-beta.82",
-    "@spatialwalk/avatarkit-rtc": "1.0.0-beta.7",
+    "@spatialwalk/avatarkit": "1.0.0-beta.104",
+    "@spatialwalk/avatarkit-rtc": "1.0.0-beta.10",
     "livekit-client": "2.16.1",
     "next": "16.1.6",
     "react": "^19.2.0",

@@ -230,8 +230,8 @@ export default function AvatarVoiceAgent({
         }
       });
 
-      player.on("error", (eventError: Error) => {
-        setError(eventError.message);
+      player.on("error", (eventError: unknown) => {
+        setError(eventError instanceof Error ? eventError.message : String(eventError));
       });
 
       player.on("stalled", async () => {

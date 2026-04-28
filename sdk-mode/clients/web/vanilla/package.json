@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@spatialwalk/avatarkit": "1.0.0-beta.92"
+    "@spatialwalk/avatarkit": "1.0.0-beta.104"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

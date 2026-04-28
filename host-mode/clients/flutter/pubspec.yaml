@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  avatar_kit: ^1.0.0-beta.34
+  avatar_kit: ^1.0.0-beta.38
   web_socket_channel: ^3.0.1
   record: ^6.2.0
   permission_handler: ^11.3.1
